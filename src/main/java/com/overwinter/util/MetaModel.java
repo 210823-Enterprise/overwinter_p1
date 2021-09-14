@@ -1,11 +1,11 @@
-package com.revature.util;
+package com.overwinter.util;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Entity;
+import com.overwinter.annotations.Column;
+import com.overwinter.annotations.Entity;
 
 public class MetaModel<T> {
 	private Class<T> clazz;

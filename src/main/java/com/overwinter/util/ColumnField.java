@@ -1,7 +1,8 @@
-package com.revature.util;
+package com.overwinter.util;
 
 import java.lang.reflect.Field;
-import com.revature.annotations.Column;
+
+import com.overwinter.annotations.Column;
 
 public class ColumnField {
 	//for this

@@ -1,8 +1,8 @@
-package com.revature.dummyModels;
+package com.overwinter.dummyModels;
 
-import com.revature.annotations.Column;
-import com.revature.annotations.Entity;
-import com.revature.annotations.Id;
+import com.overwinter.annotations.Column;
+import com.overwinter.annotations.Entity;
+import com.overwinter.annotations.Id;
 
 @Entity(tableName = "test_table")
 public class Test {
