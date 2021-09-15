@@ -7,12 +7,15 @@ import java.util.List;
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
 import com.overwinter.annotations.Id;
+import com.overwinter.exceptions.NoEnityException;
 import com.overwinter.exceptions.NoPrimaryKeyException;
 
 public class MetaModel<T> {
 	private Class<T> clazz;
 	// private IdField primaryKeyField;
 	private List<ColumnField> columnFields;
+	private IdField idField;
+	private EntityField entity;
 	// private List<ForeignKeyField> foreignKeyFields;
 	
 	public static <T> MetaModel<T> of(Class<T> clazz) {
@@ -35,13 +38,25 @@ public class MetaModel<T> {
 		return clazz.getSimpleName();
 	}
 	
+	public EntityField getEntity(){
+		Field[] fields = clazz.getDeclaredFields();//get all fields
+		for (Field field : fields) {
+			Entity ent = field.getAnnotation(Entity.class);
+			if (ent != null) {
+				this.entity= new EntityField(field);
+				return this.entity;
+			}
+		}
+		throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
+	}
 	//TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey(){
 		Field[] fields = clazz.getDeclaredFields();//get all fields
 		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
 			if (id != null) {
-				return new IdField(field);
+				idField= new IdField(field);
+				return idField;
 			}
 		}
 		throw new NoPrimaryKeyException("No primary key found for "+ clazz.getSimpleName());

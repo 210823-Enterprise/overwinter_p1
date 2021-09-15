@@ -9,7 +9,7 @@ public class IdField {
 	private Field field;
 	public IdField(Field field) {
 		if( field.getAnnotation(Id.class)==null) {
-			throw new IllegalStateException("Cannot create ColumnFeild Object! Provided field "+getName()+ " is not annotated with @Column");
+			throw new IllegalStateException("Cannot create ColumnField Object! Provided field "+getName()+ " is not annotated with @Column");
 		}
 		this.field=field;
 	}
