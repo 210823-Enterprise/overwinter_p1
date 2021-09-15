@@ -43,9 +43,9 @@ Next, place the following inside your project pom.xml file:
 Finally, inside your project structure you need a application.proprties file. 
  (typically located src/main/resources/)
  ``` 
-  url=team-3-ncc.cvtq9j4axrge.us-east-1.rds.amazonaws.com
-  admin-usr=postgres
-  admin-pw=postgres
+  url=path/to/database
+  admin-usr=username/of/database
+  admin-pw=password/of/database  
   ```
   
 ## Usage  
