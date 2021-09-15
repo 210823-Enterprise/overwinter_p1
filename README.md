@@ -51,20 +51,20 @@ Finally, inside your project structure you need a application.proprties file.
 ## Usage  
   ### Annotating classes  
   All classes which represent objects in database must be annotated.
-   - #### @Table(name = "table_name)  
+   - #### @Entity(name = "table_name)  
       - Indicates that this class is associated with table 'table_name'  
    - #### @Column(name = "column_name)  
       - Indicates that the Annotated field is a column in the table with the name 'column_name'  
-   - #### @Setter(name = "column_name")  
+   - #### @Setter(name = "column_name")  (ToDo)
       - Indicates that the anotated method is a setter for 'column_name'.  
-   - #### @Getter(name = "column_name")  
+   - #### @Getter(name = "column_name")  (ToDo)
       - Indicates that the anotated method is a getter for 'column_name'.  
-   - #### @PrimaryKey(name = "column_name") 
+   - #### @Id(name = "column_name")
       - Indicates that the annotated field is the primary key for the table.
-   - #### @SerialKey(name = "column_name") 
+   - #### @SerialKey(name = "column_name") (ToDo)
       - Indicates that the annotated field is a serial key.
 
-  ### User API  
+  ### User API  (All ToDo)
   
   - #### `public static Something getInstance()`  
      - returns the singleton instance of the class. It is the starting point to calling any of the below methods.  
@@ -101,9 +101,6 @@ Finally, inside your project structure you need a application.proprties file.
      - Start a transaction block.  
   - #### `public void addAllFromDBToCache(final Class<?> clazz)`  
      - Adds all objects currently in the databse of the given clas type to the cache.  
-
-
-
 ## License
 
 This project uses the following license: [GNU Public License 3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
