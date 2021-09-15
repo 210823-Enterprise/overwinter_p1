@@ -44,7 +44,7 @@ public class MetaModel<T> {
 				return new IdField(field);
 			}
 		}
-		throw new NoPrimaryKeyException("No primary key found for "+ clazz.ge);
+		throw new NoPrimaryKeyException("No primary key found for "+ clazz.getSimpleName());
 	}
 	
 	public List<ColumnField> getColumns() {
