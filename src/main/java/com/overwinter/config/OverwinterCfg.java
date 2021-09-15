@@ -1,18 +1,20 @@
 package com.overwinter.config;
 
 public class OverwinterCfg {
-
+ 
+	private static String driver;
 	private static String url;
 	private static String username;
 	private static String password;
-	private static int poolSize;
+	private int poolSize;
 	
-	public OverwinterCfg(String url, String username, String password, int poolSize) {
+	public OverwinterCfg(String url, String username, String password, int poolSize, String driver) {
 		super();
 		this.url = url;
 		this.username = username;
 		this.password = password;
 		this.poolSize = poolSize;
+		this.driver = driver;
 	}
 
 	public OverwinterCfg() {
