@@ -5,6 +5,7 @@ import java.util.List;
 import com.overwinter.dummyModels.Test;
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.Configuration;
+import com.overwinter.util.IdField;
 import com.overwinter.util.MetaModel;
 
 public class ORM_Driver {
@@ -19,6 +20,9 @@ public class ORM_Driver {
 				System.out.printf("Found a column fielded named %s of type %s which maps to the DB column %s\n",
 						cf.getName(), cf.getType(), cf.getColumnName());
 			}
+			IdField iF= metamodel.getPrimaryKey();
+				System.out.printf("Found a primary key fielded named %s of type %s which maps to the DB column %s\n",
+						iF.getName(), iF.getType(), iF.getColumnName());
 		}
 	}
 }

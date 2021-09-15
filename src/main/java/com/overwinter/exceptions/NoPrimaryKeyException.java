@@ -23,11 +23,4 @@ public class NoPrimaryKeyException extends RuntimeException{
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-
-	public NoPrimaryKeyException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-
 }
