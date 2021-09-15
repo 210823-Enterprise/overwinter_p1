@@ -27,7 +27,7 @@ To-do list: [`for future iterations`]
 Currently project must be included as local dependency. to do so:
 ```shell
   git clone https://github.com/210517-Enterprise/overwinter_p1.git
-  cd overwinter_p1_p1
+  cd overwinter_p1
   mvn install
 ```
 Next, place the following inside your project pom.xml file:
