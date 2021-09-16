@@ -1,6 +1,9 @@
 package com.overwinter.util;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,15 +42,17 @@ public class MetaModel<T> {
 	}
 	
 	public EntityField getEntity(){
-		Field[] fields = clazz.getDeclaredFields();//get all fields
-		for (Field field : fields) {
-			Entity ent = field.getAnnotation(Entity.class);
-			if (ent != null) {
-				this.entity= new EntityField(field);
-				return this.entity;
+		Annotation[] fields = clazz.getAnnotations();//get all fields
+		for (Annotation field : fields) {
+			String s = field.toString();
+			String tName=s.substring(s.indexOf("tableName=")+10,s.length()-1);
+			System.out.println();
+			if (tName != null) {
+				//EntityField e= new EntityField(field);
+				return new EntityField(tName);
 			}
-		}
-		throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
+		}return null;
+		//throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
 	}
 	//TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey(){
