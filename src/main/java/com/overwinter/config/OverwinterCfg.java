@@ -15,7 +15,6 @@ public class OverwinterCfg {
 //	private static String poolSize;
 
 	// Modified Kirk's file by adding few more fields
-	private static String driver;
 
 	// No args constructor
 	public OverwinterCfg() {
