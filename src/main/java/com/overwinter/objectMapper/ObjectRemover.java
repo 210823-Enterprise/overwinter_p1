@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import com.overwinter.util.MetaModel;
 
 public class ObjectRemover extends ObjectMapper {
+	static final ObjectRemover ob = new ObjectRemover();
 	public boolean removeObjectFromDb(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey= model.getPrimaryKey().getName();
@@ -27,6 +28,6 @@ public class ObjectRemover extends ObjectMapper {
 		return false;
 	}
 	static public ObjectRemover getInstance() {
-		return this;
+		return ob;
 	}
 }
