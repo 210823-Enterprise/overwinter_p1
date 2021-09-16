@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class OverwinterCfg {
-
+ 
+	private static String driver;
 	private static String url;
 	private static String username;
 	private static String password;
@@ -38,6 +39,7 @@ public class OverwinterCfg {
 		this.username = username;
 		this.password = password;
 		this.poolSize = poolSize;
+		this.driver = driver;
 	}
 
 	// Im not sure what OverwinterCfg.poolSize means
