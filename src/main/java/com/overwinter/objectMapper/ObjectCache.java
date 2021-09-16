@@ -13,8 +13,10 @@ public class ObjectCache {
 	private static ObjectCache getInstance() {
 		return obj_cache;
 	}
-	
 	public ObjectCache putObjectInCache(Object o) {
+		HashSet<Object> hSet=new HashSet<Object>();
+		hSet.add(o);
+		this.cache.put(getClass(),hSet);
 		return getInstance();
 	}
 	

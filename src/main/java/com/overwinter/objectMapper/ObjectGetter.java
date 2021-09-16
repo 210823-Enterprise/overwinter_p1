@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import com.overwinter.util.ColumnField;
@@ -41,8 +40,6 @@ public class ObjectGetter extends ObjectMapper {
 				for(String col : columns) {
 					s.put(col,rs.getObject(col));
 				}
-				
-				
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
