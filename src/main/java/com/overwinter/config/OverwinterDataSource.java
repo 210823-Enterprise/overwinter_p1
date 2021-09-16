@@ -17,15 +17,20 @@ public class OverwinterDataSource {
 	private static String password = "";
 	private static int poolsize = 5;
 	private static GenericObjectPool gPool = null;
-	public OverwinterDataSource(String driver, String url, String username, String password, int poolsize) {
+	
+	public OverwinterDataSource() {
 		super();
-		this.driver = driver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.poolsize = poolsize;
 	}
-	// Apache Common dbcp gives us the functionality to create a connection pool. But we have to do so
+
+	public OverwinterDataSource(OverwinterCfg config) {
+		super();
+		driver = config.getDriver();
+		url = config.getUrl();
+		username = config.getUsername();
+		password = config.getPassword();
+		poolsize = config.getPoolSize();
+	}
+ 	// Apache Common dbcp gives us the functionality to create a connection pool. But we have to do so
 	// by using its specific class and functionality called GenericObjectPool
 	public DataSource setUpPool () throws Exception {
 		// We use the DataSource Interface to create a connection object that
