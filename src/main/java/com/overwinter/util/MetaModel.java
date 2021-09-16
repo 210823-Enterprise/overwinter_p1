@@ -51,8 +51,7 @@ public class MetaModel<T> {
 				//EntityField e= new EntityField(field);
 				return new EntityField(tName);
 			}
-		}return null;
-		//throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
+		}throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
 	}
 	//TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey(){
