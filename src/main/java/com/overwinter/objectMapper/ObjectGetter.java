@@ -13,6 +13,7 @@ import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
 
 public class ObjectGetter extends ObjectMapper {
+	static ObjectGetter oG = new ObjectGetter();
 	public Object getObjectFromDb(Class<?> clazz,Connection conn) {
 		Object c = new Object();
 		MetaModel<?> model = MetaModel.of(clazz);
@@ -47,5 +48,10 @@ public class ObjectGetter extends ObjectMapper {
 		}
 		return c;
 		
+	}
+
+	public static ObjectGetter getInstance() {
+		// TODO Auto-generated method stub
+		return oG;
 	}
 }
