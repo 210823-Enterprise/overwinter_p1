@@ -15,7 +15,7 @@ public class OverwinterCfg {
 //	private static String poolSize;
 
 	// Modified Kirk's file by adding few more fields
-	private static String driver;
+//	private static String driver;
 
 	// No args constructor
 	public OverwinterCfg() {
@@ -75,35 +75,23 @@ public class OverwinterCfg {
 	 * 
 	 * @param filePath
 	 */
-	public void configure(String filePath) {
+	public OverwinterCfg configure(String filePath) {
 		Properties prop = new Properties();
 		try {
 			prop.load(new FileReader(filePath));
 			if (prop.getProperty("driver").isEmpty() && prop.getProperty("poolsize").isEmpty()) {
-				this.driver = "org.postgresql.Driver";
-				this.url = prop.getProperty("url");
-				this.username = prop.getProperty("username");
-				this.password = prop.getProperty("password");
-				this.poolSize = 5;
+				OverwinterCfg cfg = new OverwinterCfg("org.postgresql.Driver", prop.getProperty("url"), prop.getProperty("username"), prop.getProperty("password"), 5);
+				return cfg;
 			}
 			else if (prop.getProperty("poolsize").isEmpty()) {
-				this.driver = prop.getProperty("driver");
-				this.url = prop.getProperty("url");
-				this.username = prop.getProperty("username");
-				this.password = prop.getProperty("password");
-				this.poolSize = 5;
+				OverwinterCfg cfg = new OverwinterCfg(prop.getProperty("driver"), prop.getProperty("url"), prop.getProperty("username"), prop.getProperty("password"), 5);
+				return cfg;
 			} else if (prop.getProperty("driver").isEmpty()) {
-				this.driver = "org.postgresql.Driver";
-				this.url = prop.getProperty("url");
-				this.username = prop.getProperty("username");
-				this.password = prop.getProperty("password");
-				this.poolSize = Integer.valueOf(prop.getProperty("poolsize"));
+				OverwinterCfg cfg = new OverwinterCfg("org.postgresql.Driver", prop.getProperty("url"), prop.getProperty("username"), prop.getProperty("password"), Integer.valueOf(prop.getProperty("poolsize")));
+				return cfg;
 			} else {
-				this.driver = prop.getProperty("driver");
-				this.url = prop.getProperty("url");
-				this.username = prop.getProperty("username");
-				this.password = prop.getProperty("password");
-				this.poolSize = Integer.valueOf(prop.getProperty("poolsize"));
+				OverwinterCfg cfg = new OverwinterCfg(prop.getProperty("driver"), prop.getProperty("url"), prop.getProperty("username"), prop.getProperty("password"), Integer.valueOf(prop.getProperty("poolsize")));
+				return cfg;
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -112,10 +100,10 @@ public class OverwinterCfg {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		return null;
 	}
 
-	public static String getDriver() {
+	public String getDriver() {
 		return driver;
 	}
 
@@ -131,7 +119,7 @@ public class OverwinterCfg {
 		return password;
 	}
 
-	public static int getPoolSize() {
+	public int getPoolSize() {
 		return poolSize;
 	}
 
