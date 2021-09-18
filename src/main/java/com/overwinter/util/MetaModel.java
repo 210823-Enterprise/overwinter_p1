@@ -4,23 +4,24 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
 import com.overwinter.annotations.Id;
+import com.overwinter.annotations.JoinColumn;
 import com.overwinter.exceptions.NoEnityException;
 import com.overwinter.exceptions.NoPrimaryKeyException;
 
 public class MetaModel<T> {
 	private Class<T> clazz;
-	// private IdField primaryKeyField;
+	private IdField primaryKeyField;
 	private List<ColumnField> columnFields;
-	private IdField idField;
+	private List<ForeignKeyField> foreignKeyFields;
 	private EntityField entity;
-	// private List<ForeignKeyField> foreignKeyFields;
-	
+
 	public static <T> MetaModel<T> of(Class<T> clazz) {
 		if(clazz.getAnnotation(Entity.class) == null) {
 			throw new IllegalStateException("Cannot Create MetaModel for " + clazz.getName());
@@ -51,8 +52,7 @@ public class MetaModel<T> {
 				//EntityField e= new EntityField(field);
 				return new EntityField(tName);
 			}
-		}return null;
-		//throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
+		}throw new NoEnityException("No Entity found for "+ clazz.getSimpleName());
 	}
 	//TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey(){
@@ -60,8 +60,8 @@ public class MetaModel<T> {
 		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
 			if (id != null) {
-				idField= new IdField(field);
-				return idField;
+				primaryKeyField= new IdField(field);
+				return primaryKeyField;
 			}
 		}
 		throw new NoPrimaryKeyException("No primary key found for "+ clazz.getSimpleName());
@@ -77,6 +77,23 @@ public class MetaModel<T> {
 		}
 		return columnFields;
 	}
+	public List<ForeignKeyField> getForeignKeys() {
+
+        List<ForeignKeyField> foreignKeyFields = new ArrayList<>();
+        Field[] fields = clazz.getDeclaredFields();
+        
+        for (Field field : fields) {
+        	
+            JoinColumn column = field.getAnnotation(JoinColumn.class);
+            
+            if (column != null) {
+                foreignKeyFields.add(new ForeignKeyField(field));
+            }
+        }
+
+        return foreignKeyFields;
+
+    }
 
 	
 }
