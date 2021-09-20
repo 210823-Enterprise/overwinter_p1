@@ -23,11 +23,13 @@ public class ObjectGetter extends ObjectMapper {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
-			pstmt=setStatement(pstmt, pd, null, c, 1);
+			pstmt=setStatement(pstmt, pd, model.getGetterMethod(primaryKey), c, 1);
 			
 			ArrayList<String> columns = new ArrayList<>();
 			List<ColumnField> columnFields = model.getColumns();
+			//assume empty constuctor
 			for (ColumnField cf : columnFields) {
+				model.getSetterMethod(sql);
 				columns.add(cf.getColumnName());
 				columns.forEach((cName) -> {
 		            System.out.format("key: %s%n", cName);

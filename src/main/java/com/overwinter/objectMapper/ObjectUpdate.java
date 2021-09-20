@@ -35,7 +35,7 @@ public class ObjectUpdate extends ObjectMapper {
 				columnCounter++;
 				// set the column = value
 				// SET username = 'thinh'
-				sql += field.getColumnName() + " = " + model.getMethod(field.getColumnName()); // WHERE ARE THE VALUE? GRAB IT FROM THE META MODEL .getMethod("")
+				sql += field.getColumnName() + " = " + model.getGetterMethod(field.getColumnName()); // WHERE ARE THE VALUE? GRAB IT FROM THE META MODEL .getMethod("")
 				if(numberOfColumn > columnCounter) {
 					sql += ","; // if more than one column the add ,
 				}
@@ -47,7 +47,7 @@ public class ObjectUpdate extends ObjectMapper {
 		try {
 			statement = conn.prepareStatement(sql);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			statement =	setStatement(statement, pd, model.getMethod(model.getPrimaryKey().getName()), obj, 1);
+			statement =	setStatement(statement, pd, model.getGetterMethod(model.getPrimaryKey().getName()), obj, 1);
 			ResultSet rs = statement.executeQuery();
 			return true;
 		} catch (SQLException e) {

@@ -15,7 +15,7 @@ public class ObjectTabler extends ObjectMapper{
 	public boolean AddTabletoDb(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey = model.getPrimaryKey().getName();
-		String sql = "CREATE TABLE " + model.getClassName() + "(" + model.getPrimaryKey() + " PRIMARY KEY,";
+		String sql = "CREATE TABLE " + model.getClassName() + "(" + model.getPrimaryKey() + " PRIMARY KEY";
 		for (ColumnField c : model.getColumns()) {
 			sql += "," + c.getColumnName() + " " + c.getType() + "";
 		}
