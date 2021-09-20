@@ -9,6 +9,8 @@ import com.overwinter.config.OverwinterCfg;
 import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.objectMapper.ObjectGetter;
 import com.overwinter.objectMapper.ObjectRemover;
+import com.overwinter.objectMapper.ObjectTabler;
+import com.overwinter.objectMapper.ObjectUpdate;
 
 public class OverWinterORM {
 
@@ -16,6 +18,8 @@ public class OverWinterORM {
 	private final Connection conn;
 	private final ObjectRemover obj_remover = ObjectRemover.getInstance();
 	private final ObjectGetter obj_getter = ObjectGetter.getInstance();
+	private final ObjectTabler obj_table = ObjectTabler.getInstance();
+	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();
 	// obj getter, etc.....
 
 	private OverWinterORM() {
@@ -48,9 +52,19 @@ public class OverWinterORM {
 
 	}
 
-	public Object GetObjFromDB(Object obj) {
+	public Object getObjFromDB(Object obj) {
 
 		return obj_getter.getObjectFromDb(obj.getClass(), conn);
+
+	}
+	public Object addTabletoDb(Object obj) {
+
+		return obj_table.AddTabletoDb(obj.getClass(), conn);
+
+	}
+	public Object updateObjFromDB(Object obj) {
+
+		return obj_updater.updateObjectFromDB(obj.getClass(), conn);
 
 	}
 
