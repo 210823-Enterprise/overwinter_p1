@@ -46,11 +46,6 @@ public class MetaModel<T> {
 		setMethods();
 	}
 
-	public MetaModel(Class<?> clazz, HashMap<String, Method> getters, HashMap<Method, String[]> setters,
-			Constructor<?> constructor, String Entity_name, String pk) {
-		this.clazz = (Class<T>) clazz;
-	}
-
 	public String getClassName() {
 		return clazz.getName();
 	}
@@ -75,6 +70,7 @@ public class MetaModel<T> {
 
 	// TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey() {
+		
 		Field[] fields = clazz.getDeclaredFields();// get all fields
 		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
@@ -154,6 +150,19 @@ public class MetaModel<T> {
 			}
 		}
 		return setter;
+	}
+	public Constructor<T> getConstructor(){
+		try {
+			Constructor<T> c = clazz.getConstructor();
+			return c;
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
