@@ -11,7 +11,6 @@ import com.overwinter.util.IdField;
 import com.overwinter.util.MetaModel;
 
 public class ORM_Driver {
-
 	public static void main(String[] args) {
 		Configuration cfg = new Configuration();
 		cfg.addAnnotatedClass(Test.class);
