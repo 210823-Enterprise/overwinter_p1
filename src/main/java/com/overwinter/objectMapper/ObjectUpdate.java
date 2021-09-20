@@ -41,12 +41,13 @@ public class ObjectUpdate extends ObjectMapper {
 				}
 			}
 		}
+		// WHERE username = ?
 		sql += " WHERE " + primaryKey + "= ?";
 		PreparedStatement statement;
 		try {
 			statement = conn.prepareStatement(sql);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			statement =	setStatement(statement, pd, null, obj, 1);
+			statement =	setStatement(statement, pd, model.getMethod(model.getPrimaryKey().getName()), obj, 1);
 			ResultSet rs = statement.executeQuery();
 			return true;
 		} catch (SQLException e) {
