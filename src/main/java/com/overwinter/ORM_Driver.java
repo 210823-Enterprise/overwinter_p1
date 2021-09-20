@@ -16,6 +16,7 @@ public class ORM_Driver {
 		Configuration cfg = new Configuration();
 		cfg.addAnnotatedClass(Test.class);
 		for (MetaModel<?> metamodel : cfg.getMetaModels()) {
+			//metamodel.getMethods();
 			System.out.printf("Printing metamodel for class %s\n", metamodel.getClassName());
 			List<ColumnField> columnFields = metamodel.getColumns();
 			for (ColumnField cf : columnFields) {
