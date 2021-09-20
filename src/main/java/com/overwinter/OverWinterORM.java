@@ -15,7 +15,7 @@ import com.overwinter.objectMapper.ObjectUpdate;
 public class OverWinterORM {
 
 	final private static OverWinterORM overWinterORM = new OverWinterORM();
-	private final Connection conn;
+	private static Connection conn = null;
 	private final ObjectRemover obj_remover = ObjectRemover.getInstance();
 	private final ObjectGetter obj_getter = ObjectGetter.getInstance();
 	private final ObjectTabler obj_table = ObjectTabler.getInstance();
@@ -23,13 +23,12 @@ public class OverWinterORM {
 	// obj getter, etc.....
 
 	private OverWinterORM() {
-		this.conn = null;
 		OverwinterCfg config = new OverwinterCfg();
 		config.configure("..\\..\\..\\test\\resources\\test_application.properties");
 		OverwinterDataSource pool = new OverwinterDataSource(config);
 		try {
 			DataSource dataSource = pool.setUpPool();
-			Connection conn = dataSource.getConnection();
+			conn = dataSource.getConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,9 +56,9 @@ public class OverWinterORM {
 		return obj_getter.getObjectFromDb(obj.getClass(), conn);
 
 	}
-	public Object addTabletoDb(Object obj) {
+	public Object addTabletoDb(Class<?> clazz) {
 
-		return obj_table.AddTabletoDb(obj.getClass(), conn);
+		return obj_table.addTabletoDb(clazz, conn);
 
 	}
 	public Object updateObjFromDB(Object obj) {
