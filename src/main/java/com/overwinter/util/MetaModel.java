@@ -2,22 +2,31 @@ package com.overwinter.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.management.modelmbean.ModelMBean;
+
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
+import com.overwinter.annotations.Getter;
 import com.overwinter.annotations.Id;
 import com.overwinter.annotations.JoinColumn;
+import com.overwinter.annotations.Setter;
 import com.overwinter.exceptions.NoEnityException;
 import com.overwinter.exceptions.NoPrimaryKeyException;
 
 public class MetaModel<T> {
 	private Class<T> clazz;
 	private IdField primaryKeyField;
+	private ArrayList<Method> setters;
+	private ArrayList<Method> getters;
 	private List<ColumnField> columnFields;
 	private List<ForeignKeyField> foreignKeyFields;
 	private EntityField entity;
@@ -32,8 +41,14 @@ public class MetaModel<T> {
 	public MetaModel(Class<T> clazz) {
 		this.clazz = clazz;
 		this.columnFields = new LinkedList<>();
+		this.getters = new ArrayList<Method>();
+		this.setters = new ArrayList<Method>();
+		setMethods();
 	}
-
+	public MetaModel(Class<?> clazz,HashMap<String, Method> getters, HashMap<Method, String[]> setters, Constructor<?> constructor, String Entity_name, String pk) {
+		this.clazz = (Class<T>) clazz;
+	}
+	
 	public String getClassName() {
 		return clazz.getName();
 	}
@@ -66,7 +81,6 @@ public class MetaModel<T> {
 		}
 		throw new NoPrimaryKeyException("No primary key found for "+ clazz.getSimpleName());
 	}
-	
 	public List<ColumnField> getColumns() {
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
@@ -76,6 +90,33 @@ public class MetaModel<T> {
 			}
 		}
 		return columnFields;
+	}
+	public Method[] setMethods() {
+		Method[] mArray = clazz.getMethods();
+		for(Method m : mArray) {
+			
+			Setter s = m.getAnnotation(Setter.class);
+			if (s != null) {
+				setters.add(m);
+			}
+			Getter g = m.getAnnotation(Getter.class);
+			if (g != null) {
+				System.out.println(g.name());
+				getters.add(m);
+			}
+		}
+		return mArray;
+	}
+	public Method getMethod(String methodName) {
+		Method getter = null;
+		for(Method m : getters) {
+			Getter g = m.getAnnotation(Getter.class);
+			if (g != null && g.name().equals(methodName)) {
+				System.out.println(g.name());
+				getter=m;
+			}
+		}
+		return getter;
 	}
 	public List<ForeignKeyField> getForeignKeys() {
 
@@ -90,7 +131,6 @@ public class MetaModel<T> {
                 foreignKeyFields.add(new ForeignKeyField(field));
             }
         }
-
         return foreignKeyFields;
 
     }

@@ -26,9 +26,6 @@ public abstract class ObjectMapper {
 		}
 		return pstmt;
 	}
-	
-	
-	
 	/**
 	 * @param prepeares  statment to set
 	 * @param paramenter type
@@ -39,7 +36,11 @@ public abstract class ObjectMapper {
 		try {
 			switch (type) {
 			case "text":
+				pstmt.setString(index, input);
+				break;
 			case "String":
+				pstmt.setString(index, input);
+				break;
 			case "varchar":
 				pstmt.setString(index, input);
 				break;
