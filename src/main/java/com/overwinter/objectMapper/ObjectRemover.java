@@ -18,7 +18,7 @@ public class ObjectRemover extends ObjectMapper {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
-			pstmt =	setStatement(pstmt, pd, model.getMethod(primaryKey), obj, 1);
+			pstmt =	setStatement(pstmt, pd, model.getGetterMethod(primaryKey), obj, 1);
 			ResultSet rs = pstmt.executeQuery();
 			return true;
 		} catch (SQLException e) {
