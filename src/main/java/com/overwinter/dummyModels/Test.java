@@ -2,7 +2,9 @@ package com.overwinter.dummyModels;
 
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
+import com.overwinter.annotations.Getter;
 import com.overwinter.annotations.Id;
+import com.overwinter.annotations.Setter;
 
 @Entity(tableName = "test_table")
 public class Test {
@@ -14,5 +16,9 @@ public class Test {
 
 	@Column(columnName = "test_password")
 	private String testPassword;
-
+	
+	@Getter(name = "test_password")
+	public String getTestPassword() {
+		return testPassword;
+	}
 }

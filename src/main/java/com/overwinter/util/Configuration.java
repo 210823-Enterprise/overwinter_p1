@@ -15,13 +15,11 @@ public class Configuration {
 
 		if (metaModelList == null) {
 			metaModelList = new LinkedList<MetaModel<Class<?>>>();
-
 		}
 		metaModelList.add(MetaModel.of(annotatedClass));
 		// of model should transform class into data model to be transposed
 		return this;
 	}
-
 	public List<MetaModel<Class<?>>> getMetaModels() {
 		return (List<MetaModel<Class<?>>>) (metaModelList == null ? Collections.emptyList() : metaModelList);
 	}
