@@ -53,4 +53,13 @@ public class Test {
 		this.testPassword = testPassword;
 	}
 
+	public Test(int id, String testUserName, String testPassword) {
+		super();
+		this.id = id;
+		this.testUserName = testUserName;
+		this.testPassword = testPassword;
+	}
+	
+	
+
 }

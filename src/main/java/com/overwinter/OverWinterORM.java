@@ -69,7 +69,7 @@ public class OverWinterORM {
 
 	public Object updateObjFromDB(Object obj) {
 
-		return obj_updater.updateObjectFromDB(obj.getClass(), conn);
+		return obj_updater.updateObjectFromDB(obj, conn);
 
 	}
 
