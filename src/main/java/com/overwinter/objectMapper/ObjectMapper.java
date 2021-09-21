@@ -58,8 +58,6 @@ public abstract class ObjectMapper {
 				break;
 				//TODO:add timestamp, float, and other types
 			}
-			System.out.println("type" + type);
-			System.out.println("what? " + pstmt);
 			return pstmt;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
