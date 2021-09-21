@@ -58,6 +58,6 @@ public class Test {
 		this.id = id;
 		this.testUserName = testUserName;
 		this.testPassword = testPassword;
-	}
+	} 
 	
 }
