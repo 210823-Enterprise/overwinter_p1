@@ -145,9 +145,9 @@ public class MetaModel<T> {
 	public Method getSetterMethod(String methodName) {
 		// TODO Auto-generated method stub
 		Method setter = null;
-		for (Method m : getters) {
-			Getter g = m.getAnnotation(Getter.class);
-			if (g != null && g.name().equals(methodName)) {
+		for (Method m : setters) {
+			Setter s = m.getAnnotation(Setter.class);
+			if (s != null && s.name().equals(methodName)) {
 				setter = m;
 			}
 		}
