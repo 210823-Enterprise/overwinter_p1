@@ -3,7 +3,6 @@ package com.overwinter.objectMapper;
 import java.sql.Connection;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.overwinter.util.ColumnField;
@@ -14,7 +13,7 @@ public class ObjectUpdate extends ObjectMapper {
 	
 	public boolean updateObjectFromDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
-		String primaryKey= model.getPrimaryKey().getName();
+		String primaryKey= model.getPrimaryKey().getColumnName();
 		int numberOfColumn = 0;
 		// Loop through to see how many columns do we need to update
 		for(ColumnField field : model.getColumns()) {
@@ -35,7 +34,7 @@ public class ObjectUpdate extends ObjectMapper {
 				columnCounter++;
 				// set the column = value
 				// SET username = 'thinh'
-				sql += field.getColumnName() + " = " + model.getGetterMethod(field.getColumnName()); // WHERE ARE THE VALUE? GRAB IT FROM THE META MODEL .getMethod("")
+				sql += field.getColumnName() + " = ? "; // WHERE ARE THE VALUE? GRAB IT FROM THE META MODEL .getMethod("")
 				if(numberOfColumn > columnCounter) {
 					sql += ","; // if more than one column the add ,
 				}
@@ -47,8 +46,13 @@ public class ObjectUpdate extends ObjectMapper {
 		try {
 			statement = conn.prepareStatement(sql);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			statement =	setStatement(statement, pd, model.getGetterMethod(model.getPrimaryKey().getName()), obj, 1);
-			ResultSet rs = statement.executeQuery();
+			int counter = 1;
+			for(ColumnField field : model.getColumns()) {
+				statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);
+				counter++;
+			}
+			statement =	setStatement(statement, pd, (model.getGetterMethod(model.getPrimaryKey().getColumnName())), obj, counter);
+			statement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
