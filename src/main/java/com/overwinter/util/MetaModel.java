@@ -59,7 +59,6 @@ public class MetaModel<T> {
 		for (Annotation field : fields) {
 			String s = field.toString();
 			String tName = s.substring(s.indexOf("tableName=") + 10, s.length() - 1);
-			System.out.println();
 			if (tName != null) {
 				// EntityField e= new EntityField(field);
 				return new EntityField(tName);
@@ -103,7 +102,6 @@ public class MetaModel<T> {
 			}
 			Getter g = m.getAnnotation(Getter.class);
 			if (g != null) {
-				System.out.println(g.name());
 				getters.add(m);
 			}
 		}
@@ -115,7 +113,6 @@ public class MetaModel<T> {
 		for (Method m : getters) {
 			Getter g = m.getAnnotation(Getter.class);
 			if (g != null && g.name().equals(methodName)) {
-				System.out.println(g.name());
 				getter = m;
 			}
 		}
@@ -145,7 +142,6 @@ public class MetaModel<T> {
 		for (Method m : getters) {
 			Getter g = m.getAnnotation(Getter.class);
 			if (g != null && g.name().equals(methodName)) {
-				System.out.println(g.name());
 				setter = m;
 			}
 		}

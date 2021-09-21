@@ -16,10 +16,35 @@ public class Test {
 
 	@Column(columnName = "test_password")
 	private String testPassword;
-	
+
 	@Getter(name = "test_password")
 	public String getTestPassword() {
 		return testPassword;
+	}
+
+	@Setter(name = "test_password")
+	public void setTestPassword(String password) {
+		this.testPassword = password;
+	}
+
+	@Getter(name = "test_username")
+	public String getTestUserName() {
+		return testPassword;
+	}
+
+	@Setter(name = "test_username")
+	public void setTestUserName(String username) {
+		this.testUserName = username;
+	}
+
+	@Getter(name = "test_id")
+	public int getTestUserId() {
+		return id;
+	}
+
+	@Setter(name = "test_id")
+	public void setTestUserId(int id) {
+		this.id=id;
 	}
 
 	public Test(String testUserName, String testPassword) {
@@ -27,5 +52,5 @@ public class Test {
 		this.testUserName = testUserName;
 		this.testPassword = testPassword;
 	}
-	
+
 }
