@@ -15,21 +15,23 @@ import com.overwinter.objectMapper.ObjectUpdate;
 public class OverWinterORM {
 
 	final private static OverWinterORM overWinterORM = new OverWinterORM();
-	private static Connection conn = null;
+	Connection conn = null;
+	DataSource dataSource = null;
 	private final ObjectRemover obj_remover = ObjectRemover.getInstance();
 	private final ObjectGetter obj_getter = ObjectGetter.getInstance();
 	private final ObjectTabler obj_table = ObjectTabler.getInstance();
 	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();
 	// obj getter, etc.....
-
+	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("/Users/kirkhahn/Desktop/overwinter_p1/src/test/resources/test_application.properties"));
+	
 	private OverWinterORM() {
-		OverwinterCfg config = new OverwinterCfg();
-		System.out.println(System.getProperty("user.dir"));
-		config.configure(".\\src\\test\\resources\\test_application.properties");
-		
-		OverwinterDataSource pool = new OverwinterDataSource(config);
 		try {
-			DataSource dataSource = pool.setUpPool();
+			
+//			OverwinterCfg config = new OverwinterCfg();
+//			config.configure("C:\\Users\\Ethan\\Desktop\\overwinter_p1\\src\\test\\resources\\test_application.properties");
+//			System.out.println("the config is " + config.toString());
+//			OverwinterDataSource pool = new OverwinterDataSource(config);
+			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -59,10 +61,10 @@ public class OverWinterORM {
 
 	}
 	public Object addTabletoDb(Class<?> clazz) {
-
 		return obj_table.addTabletoDb(clazz, conn);
 
 	}
+
 	public Object updateObjFromDB(Object obj) {
 
 		return obj_updater.updateObjectFromDB(obj.getClass(), conn);
