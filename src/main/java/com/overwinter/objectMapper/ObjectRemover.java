@@ -12,14 +12,17 @@ public class ObjectRemover extends ObjectMapper {
 	static final ObjectRemover ob = new ObjectRemover();
 	public boolean removeObjectFromDb(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
-		String primaryKey= model.getPrimaryKey().getName();
-		String sql = "DELETE FROM "+ model.getEntity().getTableName()+"WHERE"+ primaryKey+"= ?;";
+		String primaryKey= model.getPrimaryKey().getColumnName();
+		String sql = "DELETE FROM "+ model.getSimpleName()+" WHERE "+ primaryKey+" = ?;";
+		System.out.print(sql);
 		PreparedStatement pstmt;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
+			System.out.println();
+			System.out.println("PRIME: "+model.getGetterMethod(primaryKey));
 			pstmt =	setStatement(pstmt, pd, model.getGetterMethod(primaryKey), obj, 1);
-			ResultSet rs = pstmt.executeQuery();
+			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

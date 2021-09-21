@@ -48,11 +48,14 @@ public abstract class ObjectMapper {
 			case "int":
 				pstmt.setInt(index, Integer.parseInt(input));
 				break;
-			case "double":
-				pstmt.setDouble(index, Double.parseDouble(input));
-				break;
 			case "int4":
 				pstmt.setInt(index, Integer.parseInt(input));
+				break;
+			case "int8":
+				pstmt.setInt(index, Integer.parseInt(input));
+				break;
+			case "double":
+				pstmt.setDouble(index, Double.parseDouble(input));
 				break;
 				//TODO:add timestamp, float, and other types
 			}
