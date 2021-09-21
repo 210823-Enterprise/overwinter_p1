@@ -33,7 +33,6 @@ public class ObjectTabler extends ObjectMapper{
 		System.out.println(sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
-			System.out.println("What? " + conn.prepareStatement(sql));
 			ParameterMetaData pd = pstmt.getParameterMetaData();
 			pstmt.execute();
 			return true;
