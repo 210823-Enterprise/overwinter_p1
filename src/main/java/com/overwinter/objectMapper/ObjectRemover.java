@@ -22,7 +22,7 @@ public class ObjectRemover extends ObjectMapper {
 			System.out.println();
 			System.out.println("PRIME: "+model.getGetterMethod(primaryKey));
 			pstmt =	setStatement(pstmt, pd, model.getGetterMethod(primaryKey), obj, 1);
-			ResultSet rs = pstmt.executeQuery();
+			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
