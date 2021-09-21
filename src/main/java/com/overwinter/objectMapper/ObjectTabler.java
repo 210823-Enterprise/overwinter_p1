@@ -16,7 +16,7 @@ public class ObjectTabler extends ObjectMapper{
 
 	public <T> boolean addTabletoDb(Class<T> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
-		String primaryKey = model.getPrimaryKey().getName();
+		String primaryKey = model.getPrimaryKey().getColumnName();
 		PreparedStatement pstmt;
 		String sql = "DROP TABLE IF EXISTS " + model.getSimpleName().toLowerCase() + " Cascade;\n CREATE TABLE " + model.getSimpleName().toLowerCase() + "(" + primaryKey + " SERIAL PRIMARY KEY";
 		for (ColumnField c : model.getColumns()) {

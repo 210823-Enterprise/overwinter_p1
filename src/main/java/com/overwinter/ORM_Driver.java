@@ -20,7 +20,7 @@ public class ORM_Driver {
 		orm.addTabletoDb(Test.class); // <-- 
 		Test test = new Test("Kirk", "Hahn");
 		orm.insertObjIntoDB(test);
-		System.out.println(test.getTestUserId());
+		orm.deleteObjFromDB(test);
 //		System.out.println(System.getProperty("user.dir"));
 		
 		

@@ -16,7 +16,7 @@ public class ObjectInsert extends ObjectMapper {
 	
 	public boolean insertObjectIntoDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
-		String primaryKey= model.getPrimaryKey().getName();
+		String primaryKey= model.getPrimaryKey().getColumnName();
 		int numberOfColumn = 0;
 		// Loop through to see how many columns do we need to update
 		for(ColumnField field : model.getColumns()) {
