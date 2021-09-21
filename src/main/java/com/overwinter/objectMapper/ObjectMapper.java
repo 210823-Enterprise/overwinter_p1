@@ -51,8 +51,13 @@ public abstract class ObjectMapper {
 			case "double":
 				pstmt.setDouble(index, Double.parseDouble(input));
 				break;
+			case "int4":
+				pstmt.setInt(index, Integer.parseInt(input));
+				break;
 				//TODO:add timestamp, float, and other types
 			}
+			System.out.println("type" + type);
+			System.out.println("what? " + pstmt);
 			return pstmt;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

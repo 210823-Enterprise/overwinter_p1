@@ -54,9 +54,10 @@ public class ObjectUpdate extends ObjectMapper {
 				statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);
 				counter++;
 			}
-			System.out.println("primary key is " + primaryKey);
-			statement =	setStatement(statement, pd, (model.getGetterMethod(primaryKey)), obj, (counter+1));
-			ResultSet rs = statement.executeQuery();
+			System.out.println("counter " + counter);
+			statement =	setStatement(statement, pd, (model.getGetterMethod(model.getPrimaryKey().getColumnName())), obj, counter);
+			System.out.println("statemnt " + statement);
+			statement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

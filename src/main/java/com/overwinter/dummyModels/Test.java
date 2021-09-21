@@ -60,6 +60,4 @@ public class Test {
 		this.testPassword = testPassword;
 	}
 	
-	
-
 }
