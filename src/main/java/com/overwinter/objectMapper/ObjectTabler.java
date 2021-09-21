@@ -18,7 +18,7 @@ public class ObjectTabler extends ObjectMapper{
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getName();
 		PreparedStatement pstmt;
-		String sql = "DROP TABLE IF EXISTS " + model.getSimpleName() + " Cascade;\n CREATE TABLE " + model.getSimpleName() + "(" + primaryKey + " SERIAL PRIMARY KEY";
+		String sql = "DROP TABLE IF EXISTS " + model.getSimpleName().toLowerCase() + " Cascade;\n CREATE TABLE " + model.getSimpleName().toLowerCase() + "(" + primaryKey + " SERIAL PRIMARY KEY";
 		for (ColumnField c : model.getColumns()) {
 			switch(c.getType().getSimpleName()) {
 			case "String" : sql += "," + c.getColumnName() + " VARCHAR(50) NOT NULL";
