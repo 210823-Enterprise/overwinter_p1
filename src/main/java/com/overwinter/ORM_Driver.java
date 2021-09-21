@@ -18,7 +18,8 @@ public class ORM_Driver {
 		// GET THE ORM UP AND RUNNING
 		OverWinterORM orm = OverWinterORM.getInstance();
 		orm.addTabletoDb(Test.class); // <-- 
-		
+		Test test = new Test("Kirk", "Hahn");
+		orm.insertObjIntoDB(test);
 //		System.out.println(System.getProperty("user.dir"));
 		
 		

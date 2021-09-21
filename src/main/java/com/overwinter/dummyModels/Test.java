@@ -21,4 +21,11 @@ public class Test {
 	public String getTestPassword() {
 		return testPassword;
 	}
+
+	public Test(String testUserName, String testPassword) {
+		super();
+		this.testUserName = testUserName;
+		this.testPassword = testPassword;
+	}
+	
 }
