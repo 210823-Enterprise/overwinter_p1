@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import com.overwinter.config.OverwinterCfg;
 import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.objectMapper.ObjectGetter;
+import com.overwinter.objectMapper.ObjectInsert;
 import com.overwinter.objectMapper.ObjectRemover;
 import com.overwinter.objectMapper.ObjectTabler;
 import com.overwinter.objectMapper.ObjectUpdate;
@@ -21,6 +22,7 @@ public class OverWinterORM {
 	private final ObjectGetter obj_getter = ObjectGetter.getInstance();
 	private final ObjectTabler obj_table = ObjectTabler.getInstance();
 	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();
+	private final ObjectInsert obj_insert = ObjectInsert.getInstance();
 	// obj getter, etc.....
 	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/test/resources/test_application.properties"));
 	
@@ -71,4 +73,7 @@ public class OverWinterORM {
 
 	}
 
+	public void insertObjIntoDB(Object obj) {
+		obj_insert.insertObjectIntoDB(obj, conn);
+	}
 }
