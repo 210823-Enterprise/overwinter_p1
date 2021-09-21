@@ -24,7 +24,9 @@ public class OverWinterORM {
 
 	private OverWinterORM() {
 		OverwinterCfg config = new OverwinterCfg();
-		config.configure("..\\..\\..\\test\\resources\\test_application.properties");
+		System.out.println(System.getProperty("user.dir"));
+		config.configure(".\\src\\test\\resources\\test_application.properties");
+		
 		OverwinterDataSource pool = new OverwinterDataSource(config);
 		try {
 			DataSource dataSource = pool.setUpPool();
