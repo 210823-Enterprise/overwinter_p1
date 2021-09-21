@@ -26,7 +26,7 @@ public class ObjectInsert extends ObjectMapper {
 		// Start the sql string
 		// Make sure everything is lowercase
 		// as long as we are consistance
-		String sql = "INSERT " + model.getEntity().getTableName().toLowerCase() + "(";
+		String sql = "INSERT INTO " + model.getEntity().getTableName().toLowerCase() + "(";
 		// loop through everything
 		int columnCounter = 0;
 		for(ColumnField field : model.getColumns()) {
@@ -58,16 +58,16 @@ public class ObjectInsert extends ObjectMapper {
 		}
 		System.out.println(sql);
 		PreparedStatement statement;
-//		try {
-//			statement = conn.prepareStatement(sql);
-//			ParameterMetaData pd = statement.getParameterMetaData();
-//			statement =	setStatement(statement, pd, model.getGetterMethod(model.getPrimaryKey().getName()), obj, 1);
-//			ResultSet rs = statement.executeQuery();
-//			return true;
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			statement = conn.prepareStatement(sql);
+			ParameterMetaData pd = statement.getParameterMetaData();
+			statement =	setStatement(statement, pd, model.getGetterMethod(model.getPrimaryKey().getName()), obj, 1);
+			ResultSet rs = statement.executeQuery();
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return false;
 	}

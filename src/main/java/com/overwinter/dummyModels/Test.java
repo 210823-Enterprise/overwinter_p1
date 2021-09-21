@@ -6,7 +6,7 @@ import com.overwinter.annotations.Getter;
 import com.overwinter.annotations.Id;
 import com.overwinter.annotations.Setter;
 
-@Entity(tableName = "test_table")
+@Entity(tableName = "test")
 public class Test {
 	@Id(columnName = "test_id")
 	private int id;
