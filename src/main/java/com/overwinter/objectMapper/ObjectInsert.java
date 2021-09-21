@@ -44,8 +44,9 @@ public class ObjectInsert extends ObjectMapper {
 				}
 			}
 		}
+		int testing = columnCounter;
 		// WHERE username = ?
-		columnCounter = 0;
+		columnCounter = 0; // this will = 1 instead of 2
 		sql += "\nVALUES(";
 		for(ColumnField field : model.getColumns()) {
 			if(numberOfColumn-- > columnCounter) {
@@ -56,12 +57,34 @@ public class ObjectInsert extends ObjectMapper {
 				break;
 			}
 		}
-		System.out.println(sql);
+		
 		PreparedStatement statement;
 		try {
 			statement = conn.prepareStatement(sql);
+			System.out.println(statement);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			statement =	setStatement(statement, pd, model.getGetterMethod(model.getPrimaryKey().getName()), obj, 1);
+			
+			
+			int counter = 1;
+			for(ColumnField field : model.getColumns()) {
+				System.out.println("field is " + field.getColumnName());
+				// If the columnName isn't empty 
+				System.out.println("obj " + field.getColumnName());
+				System.out.println("get obj value " + model.getGetterMethod(field.getColumnName()));
+//				for(int i = 1; i < testing + 1; i++) {
+					
+					statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);
+					counter++;
+//					System.out.println("Hello"+ i);
+//				}
+			}
+			
+			
+			
+			
+			
+			
+			System.out.println("statement here " + statement);
 			ResultSet rs = statement.executeQuery();
 			return true;
 		} catch (SQLException e) {
