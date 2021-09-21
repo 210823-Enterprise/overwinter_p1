@@ -20,6 +20,8 @@ public class ORM_Driver {
 		orm.addTabletoDb(Test.class); // <-- 
 		Test test = new Test("Kirk", "Hahn");
 		orm.insertObjIntoDB(test);
+		Test testUpdate = new Test(1, "Thinh", "Pham");
+		orm.updateObjFromDB(testUpdate);
 //		System.out.println(System.getProperty("user.dir"));
 		
 		
