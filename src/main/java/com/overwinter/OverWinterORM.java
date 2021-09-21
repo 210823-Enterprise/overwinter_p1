@@ -2,6 +2,8 @@ package com.overwinter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -57,9 +59,9 @@ public class OverWinterORM {
 
 	}
 
-	public Object getObjFromDB(Object obj) {
+	public Optional<List<Object>> getListObjectFromDB(Object obj) {
 
-		return obj_getter.getObjectFromDb(obj.getClass(), conn);
+		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
 	public Object addTabletoDb(Class<?> clazz) {
