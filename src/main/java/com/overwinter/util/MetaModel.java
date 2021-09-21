@@ -43,6 +43,7 @@ public class MetaModel<T> {
 		this.columnFields = new LinkedList<>();
 		this.getters = new ArrayList<Method>();
 		this.setters = new ArrayList<Method>();
+		setColumns();
 		setMethods();
 	}
 
@@ -82,6 +83,11 @@ public class MetaModel<T> {
 	}
 
 	public List<ColumnField> getColumns() {
+		
+		return columnFields;
+	}
+	
+	public List<ColumnField> setColumns() {
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			Column column = field.getAnnotation(Column.class);
@@ -90,7 +96,7 @@ public class MetaModel<T> {
 			}
 		}
 		return columnFields;
-	}
+	} 
 
 	public Method[] setMethods() {
 		Method[] mArray = clazz.getMethods();

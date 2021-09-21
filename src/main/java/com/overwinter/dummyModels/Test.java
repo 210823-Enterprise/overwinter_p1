@@ -29,7 +29,7 @@ public class Test {
 
 	@Getter(name = "test_username")
 	public String getTestUserName() {
-		return testPassword;
+		return testUserName;
 	}
 
 	@Setter(name = "test_username")
