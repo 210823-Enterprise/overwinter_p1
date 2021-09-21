@@ -14,19 +14,28 @@ public class ORM_Driver {
 	public static void main(String[] args) {
 		Configuration cfg = new Configuration();
 		cfg.addAnnotatedClass(Test.class);
-		for (MetaModel<?> metamodel : cfg.getMetaModels()) {
-			//metamodel.getMethods();
-			System.out.printf("Printing metamodel for class %s\n", metamodel.getClassName());
-			List<ColumnField> columnFields = metamodel.getColumns();
-			for (ColumnField cf : columnFields) {
-				System.out.printf("Found a column fielded named %s of type %s which maps to the DB column %s\n",
-						cf.getName(), cf.getType(), cf.getColumnName());
-			}
-			IdField iF = metamodel.getPrimaryKey();
-			System.out.printf("Found a primary key fielded named %s of type %s which maps to the DB column %s\n",
-					iF.getName(), iF.getType(), iF.getColumnName());
-			EntityField ent = metamodel.getEntity();
-			System.out.printf("Found a table named %s\n", ent.getTableName());
-		}
+		
+		// GET THE ORM UP AND RUNNING
+		OverWinterORM orm = OverWinterORM.getInstance();
+		orm.addTabletoDb(Test.class); // <-- 
+		
+//		System.out.println(System.getProperty("user.dir"));
+		
+		
+		
+//		for (MetaModel<?> metamodel : cfg.getMetaModels()) {
+//			//metamodel.getMethods();
+//			System.out.printf("Printing metamodel for class %s\n", metamodel.getClassName());
+//			List<ColumnField> columnFields = metamodel.getColumns();
+//			for (ColumnField cf : columnFields) {
+//				System.out.printf("Found a column fielded named %s of type %s which maps to the DB column %s\n",
+//						cf.getName(), cf.getType(), cf.getColumnName());
+//			}
+//			IdField iF = metamodel.getPrimaryKey();
+//			System.out.printf("Found a primary key fielded named %s of type %s which maps to the DB column %s\n",
+//					iF.getName(), iF.getType(), iF.getColumnName());
+//			EntityField ent = metamodel.getEntity();
+//			System.out.printf("Found a table named %s\n", ent.getTableName());
+//		}
 	}
 }
