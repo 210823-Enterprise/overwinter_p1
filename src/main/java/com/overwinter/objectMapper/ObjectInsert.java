@@ -63,30 +63,22 @@ public class ObjectInsert extends ObjectMapper {
 		PreparedStatement statement;
 		try {
 			statement = conn.prepareStatement(sql);
-			System.out.println(statement);
 			ParameterMetaData pd = statement.getParameterMetaData();
 			
 			
 			int counter = 1;
 			for(ColumnField field : model.getColumns()) {
-				System.out.println("field is " + field.getColumnName());
 				// If the columnName isn't empty 
-				System.out.println("obj " + field.getColumnName());
-				System.out.println("get obj value " + model.getGetterMethod(field.getColumnName()));
 //				for(int i = 1; i < testing + 1; i++) {
 					
 					statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);
 					counter++;
-//					System.out.println("Hello"+ i);
 //				}
 			}
-			System.out.println("statement here " + statement);
 			ResultSet rs = statement.executeQuery();
 			rs.next();
 			int pk = rs.getInt(primaryKey);
-			System.out.println(pk);
 			Method m = model.getSetterMethod(model.getPrimaryKey().getColumnName());
-			System.out.println(m);
 			try {
 				m.invoke(obj, pk);
 			} catch (IllegalAccessException e) {
