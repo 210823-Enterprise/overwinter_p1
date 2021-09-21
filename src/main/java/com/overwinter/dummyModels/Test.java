@@ -47,6 +47,9 @@ public class Test {
 		this.id=id;
 	}
 
+	public Test() {
+		super();
+	}
 	public Test(String testUserName, String testPassword) {
 		super();
 		this.testUserName = testUserName;
@@ -58,6 +61,11 @@ public class Test {
 		this.id = id;
 		this.testUserName = testUserName;
 		this.testPassword = testPassword;
+	}
+
+	@Override
+	public String toString() {
+		return "Test [id=" + id + ", testUserName=" + testUserName + ", testPassword=" + testPassword + "]";
 	} 
 	
 }

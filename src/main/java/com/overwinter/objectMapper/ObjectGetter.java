@@ -8,9 +8,11 @@ import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
@@ -18,41 +20,69 @@ import com.overwinter.util.MetaModel;
 public class ObjectGetter extends ObjectMapper {
 	static ObjectGetter oG = new ObjectGetter();
 
-	public Object getObjectFromDb(Class<?> clazz, Connection conn) {
-		Object c = new Object();
+	public Optional<List<Object>> getListObjectFromDB(final Class<?> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
-		String primaryKey = model.getPrimaryKey().getName();
-		String sql = "SELECT * FROM " + clazz.getSimpleName() + "WHERE" + primaryKey + "= ?;";
-		PreparedStatement pstmt;
+		String primaryKey = model.getPrimaryKey().getColumnName();
+		String sql = "SELECT * FROM " + clazz.getSimpleName() + ";";
+		List<Object> listObjects = new ArrayList<>();
+		Optional<List<Object>> outputList = Optional.of(listObjects);
+		Statement stmt;
 		try {
-			pstmt = conn.prepareStatement(sql);
-			ParameterMetaData pd = pstmt.getParameterMetaData();
-			pstmt = setStatement(pstmt, pd, model.getGetterMethod(primaryKey), c, 1);
-			List<ColumnField> columnFields = model.getColumns();
-			// assume empty constructor
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
 			Constructor<?> constuct = model.getConstructor();
-			c = constuct.newInstance();// create new instance
-			ResultSet rs;
-			if ((rs = pstmt.executeQuery()) != null) {
-				rs.next();
-				for (ColumnField cf : columnFields) {
-					Method m = model.getSetterMethod(cf.getColumnName());
-					String parType = model.getSetterMethod(cf.getColumnName()).getParameterTypes()[0].getTypeName();
-					System.out.print(parType);
-					Object output = getByType(parType, rs, sql);
-					m.invoke(c, output);
+			Object c = null;
+			List<ColumnField> columnFields = model.getColumns();
+			while (rs.next()) {
+				try {
+					c = constuct.newInstance();
+				} catch (InstantiationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvocationTargetException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+				Method m = model.getSetterMethod(primaryKey);
+				try {
+					m.invoke(c, rs.getInt(primaryKey));
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for (ColumnField cf : columnFields) {
+					m = model.getSetterMethod(cf.getColumnName());
+					String parType = model.getSetterMethod(cf.getColumnName()).getParameterTypes()[0].getSimpleName();
+					// System.out.println("Type:" + parType);
+					Object output = getByType(parType, rs, cf.getColumnName());
+					try {
+						m.invoke(c, output);
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				System.out.println(c);
+				listObjects.add(c);
+
 			}
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return c;
+		return Optional.of(listObjects);
 
 	}
 
@@ -64,26 +94,19 @@ public class ObjectGetter extends ObjectMapper {
 		try {
 			switch (type) {
 			case "String":
-				rs.getString(columnName);
-				break;
+				return rs.getString(columnName);
 			case "Integer":
-				rs.getInt(columnName);
-				break;
+				return rs.getInt(columnName);
 			case "Double":
-				rs.getDouble(columnName);
-				break;
+				return rs.getDouble(columnName);
 			case "int":
-				rs.getInt(columnName);
-				break;
+				return rs.getInt(columnName);
 			case "double":
-				rs.getDouble(columnName);
-				break;
+				return rs.getDouble(columnName);
 			case "float":
-				rs.getFloat(columnName);
-				break;
+				return rs.getFloat(columnName);
 			case "Float":
-				rs.getFloat(columnName);
-				break;
+				return rs.getFloat(columnName);
 			}
 			return null;
 		} catch (

@@ -22,6 +22,7 @@ public class ORM_Driver {
 		orm.insertObjIntoDB(test);
 		Test testUpdate = new Test(1, "Thinh", "Pham");
 		orm.updateObjFromDB(testUpdate);
+		orm.getListObjectFromDB(test);
 		orm.deleteObjFromDB(test);
 //		System.out.println(System.getProperty("user.dir"));
 		
