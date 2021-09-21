@@ -1,5 +1,7 @@
 package com.overwinter.objectMapper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
@@ -53,7 +55,7 @@ public class ObjectInsert extends ObjectMapper {
 				columnCounter++;
 				sql += "?, ";
 			} else {
-				sql += "?)\nRETURNING *;";
+				sql += "?)\nRETURNING " + primaryKey + ";";
 				break;
 			}
 		}
@@ -78,15 +80,27 @@ public class ObjectInsert extends ObjectMapper {
 //					System.out.println("Hello"+ i);
 //				}
 			}
-			
-			
-			
-			
-			
-			
 			System.out.println("statement here " + statement);
 			ResultSet rs = statement.executeQuery();
+			rs.next();
+			int pk = rs.getInt(primaryKey);
+			System.out.println(pk);
+			Method m = model.getSetterMethod(model.getPrimaryKey().getColumnName());
+			System.out.println(m);
+			try {
+				m.invoke(obj, pk);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
