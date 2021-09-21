@@ -22,7 +22,7 @@ public class OverWinterORM {
 	private final ObjectTabler obj_table = ObjectTabler.getInstance();
 	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();
 	// obj getter, etc.....
-	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("C:\\Users\\Ethan\\Desktop\\overwinterDemo\\src\\main\\resources\\application.properties"));
+	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("/Users/kirkhahn/Desktop/overwinter_p1/src/test/resources/test_application.properties"));
 	
 	private OverWinterORM() {
 		try {
