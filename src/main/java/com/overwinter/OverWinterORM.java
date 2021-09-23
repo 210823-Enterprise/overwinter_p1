@@ -23,7 +23,7 @@ import com.overwinter.transaction.Transaction;
 import jdk.internal.org.jline.utils.Log;
 
 public class OverWinterORM {
-	static Logger log = Logger.getLogger(ObjectRemover.class);
+	static Logger log = Logger.getLogger(OverWinterORM.class);
 	final private static OverWinterORM overWinterORM = new OverWinterORM();
 	Connection conn = null;
 	DataSource dataSource = null;
