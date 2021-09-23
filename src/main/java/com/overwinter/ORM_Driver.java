@@ -19,28 +19,14 @@ public class ORM_Driver {
 		OverWinterORM orm = OverWinterORM.getInstance();
 		orm.addTabletoDb(Test.class); // <-- 
 		Test test = new Test("Kirk", "Hahn");
+		Test test2 = new Test("Sam", "Boi");
 		orm.insertObjIntoDB(test);
+		//orm.insertObjIntoDB(test2);
 		Test testUpdate = new Test(1, "Thinh", "Pham");
-		orm.updateObjFromDB(testUpdate);
+		
 		orm.getListObjectFromDB(test);
+		orm.updateObjFromDB(testUpdate);
+		orm.getListObjectFromDB(Test.class, "test_id,test_username,test_password", null, null);
 		orm.deleteObjFromDB(test);
-//		System.out.println(System.getProperty("user.dir"));
-		
-		
-		
-//		for (MetaModel<?> metamodel : cfg.getMetaModels()) {
-//			//metamodel.getMethods();
-//			System.out.printf("Printing metamodel for class %s\n", metamodel.getClassName());
-//			List<ColumnField> columnFields = metamodel.getColumns();
-//			for (ColumnField cf : columnFields) {
-//				System.out.printf("Found a column fielded named %s of type %s which maps to the DB column %s\n",
-//						cf.getName(), cf.getType(), cf.getColumnName());
-//			}
-//			IdField iF = metamodel.getPrimaryKey();
-//			System.out.printf("Found a primary key fielded named %s of type %s which maps to the DB column %s\n",
-//					iF.getName(), iF.getType(), iF.getColumnName());
-//			EntityField ent = metamodel.getEntity();
-//			System.out.printf("Found a table named %s\n", ent.getTableName());
-//		}
 	}
 }
