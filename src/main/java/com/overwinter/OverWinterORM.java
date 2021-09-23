@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 
 import com.overwinter.config.OverwinterCfg;
 import com.overwinter.config.OverwinterDataSource;
+import com.overwinter.objectMapper.ObjectCache;
 import com.overwinter.objectMapper.ObjectGetter;
 import com.overwinter.objectMapper.ObjectInsert;
 import com.overwinter.objectMapper.ObjectMapper;
@@ -28,6 +29,7 @@ public class OverWinterORM {
 	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();
 	private final ObjectInsert obj_insert = ObjectInsert.getInstance();
 	private final Transaction transaction = Transaction.getInstance();
+	private final ObjectCache obj_cache = ObjectCache.getInstance();
 	// obj getter, etc.....
 	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/test/resources/test_application.properties"));
 	
@@ -58,7 +60,6 @@ public class OverWinterORM {
 	}
 
 	public Optional<List<Object>> getListObjectFromDB(Object obj) {
-
 		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
@@ -92,4 +93,10 @@ public class OverWinterORM {
 	public Transaction commit() {
 		return transaction.commit(conn);
 	}
+	
+	public boolean addAllFromDBToCache(final Class<?> clazz, OverWinterORM orm) {
+		return obj_cache.addAllFromDBToCache(clazz, orm);
+	}
+	
+	
 }

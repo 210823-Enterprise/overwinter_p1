@@ -7,7 +7,6 @@ public class ORM_Driver {
 	public static void main(String[] args) {
 		Configuration cfg = new Configuration();
 		cfg.addAnnotatedClass(Test.class);
-
 		// GET THE ORM UP AND RUNNING
 		OverWinterORM orm = OverWinterORM.getInstance();
 		orm.addTabletoDb(Test.class); // <--
@@ -24,5 +23,6 @@ public class ORM_Driver {
 		orm.getListObjectFromDB(Test.class, "test_username,test_password", "Sam,Boi", null);
 		orm.deleteObjFromDB(test);
 		orm.commit();
+		orm.addAllFromDBToCache(Test.class, orm);
 	}
 }
