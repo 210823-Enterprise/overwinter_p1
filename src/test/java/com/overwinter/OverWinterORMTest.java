@@ -5,6 +5,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -65,5 +68,18 @@ public class OverWinterORMTest {
 		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
 		
 		assertEquals(true, t);
+	}
+	
+	@Test
+	public void testGetListObjectFromDB() {
+		Tester test = new Tester(1, "Kirk", "Hahn");
+		Tester test2 = new Tester(2, "Joel", "Wiegand");
+		List<Object> testList = new ArrayList<Object>();
+		testList.add(test);
+		testList.add(test2);
+		Optional<List<Object>> ob = Optional.of(testList);
+		when(mockobject_getter.getListObjectFromDB(test.getClass(), mockconn)).thenReturn(ob);
+		System.out.println(ob);
+		assertEquals(ob, orm.getListObjectFromDB(test));
 	}
 }
