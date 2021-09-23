@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 import com.overwinter.OverWinterORM;
+import com.overwinter.dummyModels.Test;
+import com.overwinter.util.Configuration;
 import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
 
 	private final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
-	OverWinterORM orm = OverWinterORM.getInstance();
+//	OverWinterORM orm = OverWinterORM.getInstance();
 
 	private ObjectCache() {
 		super();
@@ -64,13 +66,12 @@ public class ObjectCache {
 	}
 
 	
-	public boolean addAllFromDBToCache(final Class<?> clazz) {
-		System.out.println("why is it null " + clazz.getClass());
-		System.out.println("testing " + orm.getListObjectFromDB(clazz));
+	public boolean addAllFromDBToCache(final Class<?> clazz, OverWinterORM orm) {
+		
 		// new hashset every time user log in
 		HashSet<Object> hSet = new HashSet<>();
 		// pull our list of things
-		Optional<List<Object>> list = orm.getListObjectFromDB(clazz);
+		Optional<List<Object>> list = orm.getListObjectFromDB(clazz, "test_username,test_password", "Sam,Boi", null);
 		
 		List<Object> list2 = list.get();
 		// loop through

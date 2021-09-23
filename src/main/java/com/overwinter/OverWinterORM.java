@@ -60,7 +60,6 @@ public class OverWinterORM {
 	}
 
 	public Optional<List<Object>> getListObjectFromDB(Object obj) {
-
 		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
@@ -95,8 +94,8 @@ public class OverWinterORM {
 		return transaction.commit(conn);
 	}
 	
-	public boolean addAllFromDBToCache(final Class<?> clazz) {
-		return obj_cache.addAllFromDBToCache(clazz);
+	public boolean addAllFromDBToCache(final Class<?> clazz, OverWinterORM orm) {
+		return obj_cache.addAllFromDBToCache(clazz, orm);
 	}
 	
 	
