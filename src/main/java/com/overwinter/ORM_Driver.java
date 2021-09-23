@@ -21,12 +21,13 @@ public class ORM_Driver {
 		Test test = new Test("Kirk", "Hahn");
 		Test test2 = new Test("Sam", "Boi");
 		orm.insertObjIntoDB(test);
-		//orm.insertObjIntoDB(test2);
+		orm.insertObjIntoDB(test2);
 		Test testUpdate = new Test(1, "Thinh", "Pham");
 		
 		orm.getListObjectFromDB(test);
 		orm.updateObjFromDB(testUpdate);
 		orm.getListObjectFromDB(Test.class, "test_id,test_username,test_password", null, null);
+		orm.getListObjectFromDB(Test.class, "test_username,test_password", "Sam,Boi", null);
 		orm.deleteObjFromDB(test);
 	}
 }
