@@ -7,7 +7,7 @@ import com.overwinter.annotations.Id;
 import com.overwinter.annotations.Setter;
 
 @Entity(tableName = "test")
-public class Test {
+public class Tester {
 	@Id(columnName = "test_id")
 	private int id;
 
@@ -47,16 +47,16 @@ public class Test {
 		this.id=id;
 	}
 
-	public Test() {
+	public Tester() {
 		super();
 	}
-	public Test(String testUserName, String testPassword) {
+	public Tester(String testUserName, String testPassword) {
 		super();
 		this.testUserName = testUserName;
 		this.testPassword = testPassword;
 	}
 
-	public Test(int id, String testUserName, String testPassword) {
+	public Tester(int id, String testUserName, String testPassword) {
 		super();
 		this.id = id;
 		this.testUserName = testUserName;
