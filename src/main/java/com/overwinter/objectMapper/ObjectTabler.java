@@ -16,7 +16,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectTabler extends ObjectMapper{
 	static final ObjectTabler ob = new ObjectTabler();
-	static Logger log = Logger.getLogger(OverwinterDataSource.class);
+	static Logger log = Logger.getLogger(ObjectTabler.class);
 	public <T> boolean addTabletoDb(Class<T> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName();
@@ -37,10 +37,10 @@ public class ObjectTabler extends ObjectMapper{
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
 			pstmt.execute();
+			log.info("Table created using "+pstmt);
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("SQL error in ObjectTabler");
 		}
 		return false;
 	}

@@ -13,7 +13,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectRemover extends ObjectMapper {
 	static final ObjectRemover ob = new ObjectRemover();
-	static Logger log = Logger.getLogger(OverwinterDataSource.class);
+	static Logger log = Logger.getLogger(ObjectRemover.class);
 	public boolean removeObjectFromDb(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey= model.getPrimaryKey().getColumnName();
@@ -23,11 +23,12 @@ public class ObjectRemover extends ObjectMapper {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
 			pstmt =	setStatement(pstmt, pd, model.getGetterMethod(primaryKey), obj, 1);
+			log.error(pstmt+" executing in ObjectRemover");
 			pstmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("SQLException error in ObjectRemover");
 		}
 		return false;
 	}

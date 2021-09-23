@@ -24,7 +24,7 @@ import jdk.internal.org.jline.utils.Log;
 
 public class ObjectGetter extends ObjectMapper {
 	static ObjectGetter oG = new ObjectGetter();
-	static Logger log = Logger.getLogger(OverwinterDataSource.class);
+	static Logger log = Logger.getLogger(ObjectGetter.class);
 
 	public Optional<List<Object>> getListObjectFromDB(final Class<?> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
