@@ -13,8 +13,6 @@ import java.util.List;
 
 import javax.management.modelmbean.ModelMBean;
 
-import org.apache.log4j.Logger;
-
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
 import com.overwinter.annotations.Getter;
@@ -25,7 +23,6 @@ import com.overwinter.exceptions.NoEnityException;
 import com.overwinter.exceptions.NoPrimaryKeyException;
 
 public class MetaModel<T> {
-	static Logger log = Logger.getLogger(MetaModel.class);
 	private Class<T> clazz;
 	private IdField primaryKeyField;
 	private ArrayList<Method> setters;
@@ -38,7 +35,6 @@ public class MetaModel<T> {
 		if (clazz.getAnnotation(Entity.class) == null) {
 			throw new IllegalStateException("Cannot Create MetaModel for " + clazz.getName());
 		}
-		log.info("New MetaModel created for class:"+clazz);
 		return new MetaModel<>(clazz);
 	}
 
@@ -49,7 +45,6 @@ public class MetaModel<T> {
 		this.setters = new ArrayList<Method>();
 		setColumns();
 		setMethods();
-		log.info("New MetaModel created for class:"+clazz);
 	}
 
 	public String getClassName() {
@@ -70,21 +65,20 @@ public class MetaModel<T> {
 				return new EntityField(tName);
 			}
 		}
-		log.error("No Entity found for " + clazz.getSimpleName());
 		throw new NoEnityException("No Entity found for " + clazz.getSimpleName());
 	}
+
+	// TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey() {
+		
 		Field[] fields = clazz.getDeclaredFields();// get all fields
 		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
 			if (id != null) {
 				primaryKeyField = new IdField(field);
-				log.info("Primary Key found:"+primaryKeyField);
 				return primaryKeyField;
-				
 			}
 		}
-		log.error("No primary key found for " + clazz.getSimpleName());
 		throw new NoPrimaryKeyException("No primary key found for " + clazz.getSimpleName());
 	}
 
@@ -101,7 +95,6 @@ public class MetaModel<T> {
 				columnFields.add(new ColumnField(field));
 			}
 		}
-		log.info("Columns found:"+columnFields);
 		return columnFields;
 	} 
 
@@ -118,7 +111,6 @@ public class MetaModel<T> {
 				getters.add(m);
 			}
 		}
-		log.info("Methods found:"+columnFields);
 		return mArray;
 	}
 
@@ -130,7 +122,6 @@ public class MetaModel<T> {
 				getter = m;
 			}
 		}
-		log.info("Getter found:"+getter);
 		return getter;
 	}
 
@@ -147,7 +138,6 @@ public class MetaModel<T> {
 				foreignKeyFields.add(new ForeignKeyField(field));
 			}
 		}
-		log.info("Foreign keys found:"+columnFields);
 		return foreignKeyFields;
 
 	}
@@ -161,18 +151,18 @@ public class MetaModel<T> {
 				setter = m;
 			}
 		}
-		log.info("Setter found:"+setter);
 		return setter;
 	}
 	public Constructor<T> getConstructor(){
 		try {
 			Constructor<T> c = clazz.getConstructor();
-			log.info("Constructor found:"+c);
 			return c;
 		} catch (NoSuchMethodException e) {
-			log.error("NoSuchMethodException in getConstructor");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SecurityException e) {
-			log.error("SecurityException in getConstructor");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}
