@@ -8,12 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
+import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
 
 public class ObjectInsert extends ObjectMapper {
 	static ObjectInsert objInsert = new ObjectInsert();
-	
+	static Logger log = Logger.getLogger(ObjectInsert.class);
 	public boolean insertObjectIntoDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey= model.getPrimaryKey().getColumnName();
@@ -59,12 +62,10 @@ public class ObjectInsert extends ObjectMapper {
 				break;
 			}
 		}
-		
 		PreparedStatement statement;
 		try {
 			statement = conn.prepareStatement(sql);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			
 			
 			int counter = 1;
 			for(ColumnField field : model.getColumns()) {
@@ -75,6 +76,7 @@ public class ObjectInsert extends ObjectMapper {
 					counter++;
 //				}
 			}
+			log.info(sql+" is updating the database");
 			ResultSet rs = statement.executeQuery();
 			rs.next();
 			int pk = rs.getInt(primaryKey);
@@ -82,25 +84,22 @@ public class ObjectInsert extends ObjectMapper {
 			try {
 				m.invoke(obj, pk);
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.info("IllegalAccessException error in ObjectInsert");
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.info("IllegalArgumentException error in ObjectInsert");
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.info("InvocationTargetException error in ObjectInsert");
 			}
 			return true;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("SQLException error in ObjectInsert");
 		}
-		
 		return false;
 	}
-	
 	// Get instance of objUpdate
 	public static ObjectInsert getInstance() {
 		return objInsert;

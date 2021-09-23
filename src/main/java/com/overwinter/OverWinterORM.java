@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import com.overwinter.config.OverwinterCfg;
 import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.objectMapper.ObjectCache;
@@ -18,8 +20,10 @@ import com.overwinter.objectMapper.ObjectTabler;
 import com.overwinter.objectMapper.ObjectUpdate;
 import com.overwinter.transaction.Transaction;
 
-public class OverWinterORM {
+import jdk.internal.org.jline.utils.Log;
 
+public class OverWinterORM {
+	static Logger log = Logger.getLogger(ObjectRemover.class);
 	final private static OverWinterORM overWinterORM = new OverWinterORM();
 	Connection conn = null;
 	DataSource dataSource = null;
@@ -37,12 +41,11 @@ public class OverWinterORM {
 		try {
 			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
+			log.info("New OverWinterORM launched:"+this);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("SQLException thrown in OverwinterDataSource");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("General Exception thrown in OverwinterDataSource");
 		}
 	}
 
@@ -101,7 +104,6 @@ public class OverWinterORM {
 	}
 	
 	public ObjectCache putObjectInCache(Object obj) {
-		
 		return obj_cache.putObjectInCache(obj);
 	}
 	
