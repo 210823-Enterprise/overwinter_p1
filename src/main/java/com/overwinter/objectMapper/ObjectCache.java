@@ -2,6 +2,7 @@ package com.overwinter.objectMapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,18 +18,18 @@ public class ObjectCache {
 
 	private final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
-//	OverWinterORM orm = OverWinterORM.getInstance();
+	OverWinterORM orm = OverWinterORM.getInstance();
 
 	private ObjectCache() {
 		super();
 		cache = new HashMap<>();
 	}
 
+	// we call this method after the first time
 	public ObjectCache putObjectInCache(Object o) {
 		// set to that cache object
 		HashSet<Object> hSet = cache.get(o.getClass());
 		int pk = 0;
-
 		MetaModel<?> model = MetaModel.of(o.getClass());
 		String primaryKey = model.getPrimaryKey().getColumnName();
 		Method m = model.getGetterMethod(primaryKey);
@@ -36,7 +37,6 @@ public class ObjectCache {
 			pk = (int) m.invoke(o);
 			// loop through hashset of the attach class
 			for (Object theObj : hSet) {
-				System.out.println("the obj is " + theObj);
 				MetaModel<?> model2 = MetaModel.of(theObj.getClass());
 				String primaryKey2 = model2.getPrimaryKey().getColumnName();
 				Method m2 = model2.getGetterMethod(primaryKey2);
@@ -61,25 +61,21 @@ public class ObjectCache {
 		}
 
 		this.cache.put(o.getClass(), hSet);
-
+		cache.forEach((k, v) -> System.out.println("UPDATE PER CRUD Key " + k + " Value " + v));
 		return getInstance();
 	}
 
 	
-	public boolean addAllFromDBToCache(final Class<?> clazz, OverWinterORM orm) {
+	public boolean addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
 		
 		// new hashset every time user log in
 		HashSet<Object> hSet = new HashSet<>();
-		// pull our list of things
-		Optional<List<Object>> list = orm.getListObjectFromDB(clazz, "test_username,test_password", "Sam,Boi", null);
-		
-		List<Object> list2 = list.get();
 		// loop through
-		for(Object theObj : list2) {
+		for(Object theObj : list.get()) {
 			hSet.add(theObj);
 		}
 		this.cache.put(clazz, hSet);
-		cache.forEach((k, v) -> System.out.println("Key " + k + " Value " + v));
+		cache.forEach((k, v) -> System.out.println("FIRST TIME CACHE Key " + k + " Value " + v));
 		return true;
 	}
 	

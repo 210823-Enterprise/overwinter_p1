@@ -94,8 +94,15 @@ public class OverWinterORM {
 		return transaction.commit(conn);
 	}
 	
-	public boolean addAllFromDBToCache(final Class<?> clazz, OverWinterORM orm) {
-		return obj_cache.addAllFromDBToCache(clazz, orm);
+	public boolean addAllFromDBToCache(final Class<?> clazz) {
+		// this method will call the first time user login
+		Optional<List<Object>> list = obj_getter.getListObjectFromDB(clazz, conn);
+		return obj_cache.addAllFromDBToCache(clazz, list);
+	}
+	
+	public ObjectCache putObjectInCache(Object obj) {
+		
+		return obj_cache.putObjectInCache(obj);
 	}
 	
 	
