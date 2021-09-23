@@ -23,9 +23,8 @@ public class ObjectGetter extends ObjectMapper {
 	public Optional<List<Object>> getListObjectFromDB(final Class<?> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName();
-		String sql = "SELECT * FROM " + clazz.getSimpleName() + ";";
+		String sql = "SELECT * FROM " + clazz.getSimpleName().toLowerCase() + ";";
 		List<Object> listObjects = new ArrayList<>();
-		Optional<List<Object>> outputList = Optional.of(listObjects);
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
@@ -37,23 +36,19 @@ public class ObjectGetter extends ObjectMapper {
 				try {
 					c = constuct.newInstance();
 				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
+
 					e1.printStackTrace();
 				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				Method m = model.getSetterMethod(primaryKey);
 				try {
 					m.invoke(c, rs.getInt(primaryKey));
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				for (ColumnField cf : columnFields) {
@@ -63,10 +58,8 @@ public class ObjectGetter extends ObjectMapper {
 					try {
 						m.invoke(c, output);
 					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -74,10 +67,8 @@ public class ObjectGetter extends ObjectMapper {
 
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return Optional.of(listObjects);
@@ -87,98 +78,80 @@ public class ObjectGetter extends ObjectMapper {
 	public Optional<List<Object>> getListObjectFromDB(final Class<?> clazz, Connection conn, final String columns,
 			final String conditions, final String operators) {
 		String[] columnArray = new String[0];
-		if (columns!=null&&columns.length() > 0) {
+		if (columns != null && columns.length() > 0) {
 			columnArray = columns.split(",");
 		}
 		String[] conditionsArray = new String[0];
-		if (conditions!=null&&conditions.length() > 0) {
+		if (conditions != null && conditions.length() > 0) {
 			conditionsArray = conditions.split(",");
 		}
 		String[] operatorsArray = new String[0];
-		if (operators!=null&&operators.length() > 0) {
+		if (operators != null && operators.length() > 0) {
 			operatorsArray = operators.split(",");
 		}
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName().toLowerCase();
-		String sqltemp = "SELECT * FROM " + clazz.getSimpleName() + ";";
 		String sql = "SELECT ";
-		boolean primekeyIncluded =false;
-		for (int i= 0; i<columnArray.length; i++) {
+		boolean primekeyIncluded = false;
+		for (int i = 0; i < columnArray.length; i++) {
 			// If the columnName isn't empty
 			if (i > 0) {
 				sql += " ,";
 			}
-				if(columnArray[i].trim().toLowerCase().equals(primaryKey)) {
-					primekeyIncluded=true;
-				}
-				sql += columnArray[i].trim().toLowerCase();
+			if (columnArray[i].trim().toLowerCase().equals(primaryKey)) {
+				primekeyIncluded = true;
+			}
+			sql += columnArray[i].trim().toLowerCase();
 		}
-		//2,3,5,all,1
-		sql+=" FROM "+clazz.getSimpleName();
-		if(conditionsArray.length>0)sql+=" WHERE ";
-		for (int i2 = 0; i2<conditionsArray.length; i2++) {
+		// 2,3,5,all,1
+		sql += " FROM " + clazz.getSimpleName().toLowerCase();
+		if (conditionsArray.length > 0)
+			sql += " WHERE ";
+		for (int i2 = 0; i2 < conditionsArray.length; i2++) {
 			// If the columnName isn't empty
 			if (i2 > 0) {
-				sql += " ,";
+				sql += " AND ";
 			}
-				sql += columnArray[i2].trim().toLowerCase()+"="+conditionsArray[i2];
+			sql += columnArray[i2].trim().toLowerCase() + "=" + "?";
 		}
-		sql+=";";
+		sql += ";";
 		List<Object> listObjects = new ArrayList<>();
-		Optional<List<Object>> outputList = Optional.of(listObjects);
-		PreparedStatement pstmt;
+		PreparedStatement pstmt = null;
+		Constructor<?> constuct = model.getConstructor();
 		try {
-			
 			pstmt = conn.prepareStatement(sql);
+			ParameterMetaData pd = pstmt.getParameterMetaData();
+			//pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(1), conditionsArray[0], 1);
+			for (int i3 = 0; i3 < conditionsArray.length; i3++) {
+				pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(i3+1), conditionsArray[i3], i3+1);
+			}
+			System.out.println(pstmt);
 			ResultSet rs = pstmt.executeQuery();
-			Constructor<?> constuct = model.getConstructor();
 			Object c = null;
-			List<ColumnField> columnFields = model.getColumns();
 			while (rs.next()) {
-				try {
-					c = constuct.newInstance();
-				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				c = constuct.newInstance();
 				Method m = model.getSetterMethod(primaryKey);
-				try {
-					if(primekeyIncluded)m.invoke(c, rs.getInt(primaryKey));
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for (String cf: columnArray) {
+				if (primekeyIncluded)
+					m.invoke(c, rs.getInt(primaryKey));
+
+				for (String cf : columnArray) {
 					m = model.getSetterMethod(cf);
 					String parType = model.getSetterMethod(cf).getParameterTypes()[0].getSimpleName();
 					Object output = getByType(parType, rs, cf);
-					try {
-						m.invoke(c, output);
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					m.invoke(c, output);
 				}
 				listObjects.add(c);
-
+				System.out.println(c);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
 			e.printStackTrace();
 		}
 		return Optional.of(listObjects);
