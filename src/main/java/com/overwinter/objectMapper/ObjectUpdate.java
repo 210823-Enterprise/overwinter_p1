@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
 

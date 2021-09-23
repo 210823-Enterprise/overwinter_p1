@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.overwinter.OverWinterORM;
 import com.overwinter.config.OverwinterDataSource;
-import com.overwinter.dummyModels.Test;
+import com.overwinter.dummyModels.Tester;
 import com.overwinter.util.Configuration;
 import com.overwinter.util.MetaModel;
 
