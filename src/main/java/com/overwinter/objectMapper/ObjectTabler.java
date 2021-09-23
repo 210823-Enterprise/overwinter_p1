@@ -7,13 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 import com.overwinter.annotations.Entity;
+import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
 
 public class ObjectTabler extends ObjectMapper{
 	static final ObjectTabler ob = new ObjectTabler();
-
+	static Logger log = Logger.getLogger(OverwinterDataSource.class);
 	public <T> boolean addTabletoDb(Class<T> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName();

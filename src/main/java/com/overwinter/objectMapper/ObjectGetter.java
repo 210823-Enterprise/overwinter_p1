@@ -14,11 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
+
+import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.util.ColumnField;
 import com.overwinter.util.MetaModel;
 
+import jdk.internal.org.jline.utils.Log;
+
 public class ObjectGetter extends ObjectMapper {
 	static ObjectGetter oG = new ObjectGetter();
+	static Logger log = Logger.getLogger(OverwinterDataSource.class);
 
 	public Optional<List<Object>> getListObjectFromDB(final Class<?> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
@@ -28,48 +34,48 @@ public class ObjectGetter extends ObjectMapper {
 		Statement stmt;
 		try {
 			stmt = conn.createStatement();
+			
 			ResultSet rs = stmt.executeQuery(sql);
+			log.info(sql + " has been executed against database");
 			Constructor<?> constuct = model.getConstructor();
 			Object c = null;
 			List<ColumnField> columnFields = model.getColumns();
 			while (rs.next()) {
 				try {
 					c = constuct.newInstance();
+					log.info("new Instance created");
 				} catch (InstantiationException e1) {
-
-					e1.printStackTrace();
+					log.error("Instantiation Exception in getListObjectFromDB()");
 				} catch (IllegalAccessException e1) {
-					e1.printStackTrace();
+					log.error("Illegal Access Exception in getListObjectFromDB()");
 				} catch (InvocationTargetException e1) {
-					e1.printStackTrace();
+					log.error("Invocation Target Exception in getListObjectFromDB()");
 				}
 				Method m = model.getSetterMethod(primaryKey);
 				try {
 					m.invoke(c, rs.getInt(primaryKey));
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					log.error("Illegal Access Exception in getListObjectFromDB() for model.getSetterMethod(primaryKey)");
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					log.error("Invocation Target Exception in getListObjectFromDB() for model.getSetterMethod(primaryKey)");
 				}
 				for (ColumnField cf : columnFields) {
 					m = model.getSetterMethod(cf.getColumnName());
 					String parType = model.getSetterMethod(cf.getColumnName()).getParameterTypes()[0].getSimpleName();
 					Object output = getByType(parType, rs, cf.getColumnName());
-					try {
-						m.invoke(c, output);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
+						try {
+							m.invoke(c, output);
+						} catch (IllegalAccessException | InvocationTargetException e) {
+							log.error("Exception in getListObjectFromDB() for model.getSetterMethod(c,output)");
+						}
 				}
 				listObjects.add(c);
-
+				log.info(c+" added to list of objects in getListObjectFromDB() ");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("SQLException in getListObjectFromDB()");
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			log.error("bad argument in getListObjectFromDB()");
 		}
 		return Optional.of(listObjects);
 
@@ -92,6 +98,7 @@ public class ObjectGetter extends ObjectMapper {
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName().toLowerCase();
 		String sql = "SELECT ";
+		log.info("Columns:"+columnArray+" conditions: "+conditionsArray+" operators: "+operatorsArray);
 		boolean primekeyIncluded = false;
 		for (int i = 0; i < columnArray.length; i++) {
 			// If the columnName isn't empty
@@ -115,17 +122,18 @@ public class ObjectGetter extends ObjectMapper {
 			sql += columnArray[i2].trim().toLowerCase() + "=" + "?";
 		}
 		sql += ";";
+		log.info(sql+" is about to query the database");
 		List<Object> listObjects = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		Constructor<?> constuct = model.getConstructor();
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
-			//pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(1), conditionsArray[0], 1);
 			for (int i3 = 0; i3 < conditionsArray.length; i3++) {
 				pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(i3+1), conditionsArray[i3], i3+1);
 			}
 			System.out.println(pstmt);
+			log.info("Prepared Statment "+pstmt+" is about to query the database");
 			ResultSet rs = pstmt.executeQuery();
 			Object c = null;
 			while (rs.next()) {
@@ -142,18 +150,20 @@ public class ObjectGetter extends ObjectMapper {
 				}
 				listObjects.add(c);
 				System.out.println(c);
+				log.info(c+" has been added to the list of objects grabbed from database");
 			}
 		} catch (SQLException e2) {
-			e2.printStackTrace();
+			log.error("SQLException exception from complex getObjectFromDB");
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			log.error("IllegalAccessException exception from complex getObjectFromDB");
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			log.error("IllegalArgumentException exception from complex getObjectFromDB");
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			log.error("InvocationTargetException exception from complex getObjectFromDB");
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			log.error("InstantiationException exception from complex getObjectFromDB");
 		}
+		log.info(listObjects+" is being returned from complex getListObjectFromDB");
 		return Optional.of(listObjects);
 	}
 
@@ -165,26 +175,34 @@ public class ObjectGetter extends ObjectMapper {
 		try {
 			switch (type) {
 			case "String":
+				log.info("String found in ResultSet");
 				return rs.getString(columnName);
 			case "Integer":
+				log.info("Integer found in ResultSet");
 				return rs.getInt(columnName);
 			case "Double":
+				log.info("Double found in ResultSet");
 				return rs.getDouble(columnName);
 			case "int":
+				log.info("int found in ResultSet");
 				return rs.getInt(columnName);
 			case "double":
+				log.info("double found in ResultSet");
 				return rs.getDouble(columnName);
 			case "float":
+				log.info("float found in ResultSet");
 				return rs.getFloat(columnName);
 			case "Float":
+				log.info("Float found in ResultSet");
 				return rs.getFloat(columnName);
 			}
+			log.error("unknown type found in ResultSet in getByType");
 			return null;
 		} catch (
 
 		SQLException e) {
-			e.printStackTrace();
+			log.error("SQLException exception from getByType");
+			return null;
 		}
-		return null;
 	}
 }
