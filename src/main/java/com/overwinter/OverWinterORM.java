@@ -30,11 +30,6 @@ public class OverWinterORM {
 	
 	private OverWinterORM() {
 		try {
-			
-//			OverwinterCfg config = new OverwinterCfg();
-//			config.configure("C:\\Users\\Ethan\\Desktop\\overwinter_p1\\src\\test\\resources\\test_application.properties");
-//			System.out.println("the config is " + config.toString());
-//			OverwinterDataSource pool = new OverwinterDataSource(config);
 			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
 		} catch (SQLException e) {
@@ -64,6 +59,14 @@ public class OverWinterORM {
 		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
+	public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions){
+		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, null);
+	}
+
+	public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions,final String operators){
+		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, operators);
+	}
+
 	public Object addTabletoDb(Class<?> clazz) {
 		return obj_table.addTabletoDb(clazz, conn);
 
