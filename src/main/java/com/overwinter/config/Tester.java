@@ -31,7 +31,7 @@ public class Tester {
 		// Ok I was able to extract the values let's input those in the database
 		OverwinterCfg config = new OverwinterCfg();
 		config.configure(".\\src\\test\\resources\\test_application.properties");
-		System.out.println(System.getProperty("user.dir"));
+		//System.out.println(System.getProperty("user.dir"));
 		OverwinterDataSource pool = new OverwinterDataSource(config);
 		ResultSet rs = null;
 		Connection connObj = null;
