@@ -36,6 +36,7 @@ public class OverWinterORMTest {
 	@Before
 	public void setUp() {
 		orm = OverWinterORM.getInstance();
+		mockobject_remover = ObjectRemover.getInstance();
 		mockobject_remover = mock(ObjectRemover.class);
 		mockobject_getter = mock(ObjectGetter.class);
 		mockobject_tabler = mock(ObjectTabler.class);
@@ -65,9 +66,18 @@ public class OverWinterORMTest {
 		
 		when(mockobject_remover.removeObjectFromDb(test, mockconn)).thenReturn(true);
 		
-		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
+		boolean t = orm.deleteObjFromDB(test);
 		
 		assertEquals(true, t);
+	}
+	
+	@Test
+	public void testGetaddTabletoDb() {
+		Tester test = new Tester(1, "Kirk", "Hahn");
+		
+		when(mockobject_insert.insertObjectIntoDB(test, mockconn)).thenReturn(true);
+		
+//		boolean t = m
 	}
 	
 	@Test
@@ -79,7 +89,7 @@ public class OverWinterORMTest {
 		testList.add(test2);
 		Optional<List<Object>> ob = Optional.of(testList);
 		when(mockobject_getter.getListObjectFromDB(test.getClass(), mockconn)).thenReturn(ob);
-		System.out.println(ob);
+		
 		assertEquals(ob, orm.getListObjectFromDB(test));
 	}
 }
