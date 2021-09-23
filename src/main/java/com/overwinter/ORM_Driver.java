@@ -6,13 +6,13 @@ import com.overwinter.util.Configuration;
 public class ORM_Driver {
 	public static void main(String[] args) {
 		Configuration cfg = new Configuration();
-		cfg.addAnnotatedClass(Test.class);
+		cfg.addAnnotatedClass(Tester.class);
 		// GET THE ORM UP AND RUNNING
 		OverWinterORM orm = OverWinterORM.getInstance();
 //		orm.addTabletoDb(Test.class); // <-- 
 //		Test test = new Test("Kirk", "Hahn");
 
-		Test test2 = new Test(2,"Skinny", "Boi");
+		Tester test2 = new Tester(2,"Skinny", "Boi");
 //		orm.insertObjIntoDB(test);
 //		orm.insertObjIntoDB(test2);
 //		Test testUpdate = new Test(1, "Thinh", "Pham");
@@ -26,7 +26,7 @@ public class ORM_Driver {
 //		orm.commit();
 		
 		// Thinny Boi HERE !!! SHOULD BE V
-		orm.addAllFromDBToCache(Test.class); // this will be call the first time so it makes senes but not the 2nd time
+		orm.addAllFromDBToCache(Tester.class); // this will be call the first time so it makes senes but not the 2nd time
 		orm.updateObjFromDB(test2);
 		orm.putObjectInCache(test2); // THIS WILL BE SKINN BOI!!!!
 		// this SHOULD return the whole cache including update version of id2 = skinny boi
