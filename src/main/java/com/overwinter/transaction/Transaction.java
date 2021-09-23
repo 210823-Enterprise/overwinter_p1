@@ -11,7 +11,7 @@ public class Transaction {
 		
 	}
 	
-	public static Transaction beginTransaction(Connection conn) {
+	public Transaction beginTransaction(Connection conn) {
 		try {
 			conn.setAutoCommit(false);
 		} catch (SQLException e) {
@@ -21,7 +21,7 @@ public class Transaction {
 		return getInstance();
 	}
 	
-	public static Transaction commit(Connection conn) {
+	public Transaction commit(Connection conn) {
 		try {
 			conn.commit();
 		} catch (SQLException e) {
