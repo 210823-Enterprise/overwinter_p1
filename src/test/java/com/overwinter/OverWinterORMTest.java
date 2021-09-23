@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.overwinter.dummyModels.Tester;
+import com.overwinter.dummyModels.Testerer;
 import com.overwinter.objectMapper.ObjectCache;
 import com.overwinter.objectMapper.ObjectGetter;
 import com.overwinter.objectMapper.ObjectInsert;

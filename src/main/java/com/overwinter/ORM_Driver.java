@@ -1,6 +1,6 @@
 package com.overwinter;
 
-import com.overwinter.dummyModels.Test;
+import com.overwinter.dummyModels.Tester;
 import com.overwinter.util.Configuration;
 
 public class ORM_Driver {
