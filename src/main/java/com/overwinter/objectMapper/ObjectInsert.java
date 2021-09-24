@@ -15,7 +15,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectInsert extends ObjectMapper {
 	static ObjectInsert objInsert = new ObjectInsert();
-	static Logger log = Logger.getLogger(ObjectInsert.class);
+	private static Logger log = Logger.getLogger(ObjectInsert.class);
 	public boolean insertObjectIntoDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey= model.getPrimaryKey().getColumnName();
@@ -83,19 +83,19 @@ public class ObjectInsert extends ObjectMapper {
 			try {
 				m.invoke(obj, pk);
 			} catch (IllegalAccessException e) {
-				log.info("IllegalAccessException error in ObjectInsert");
+				log.info("\nIllegalAccessException error in ObjectInsert");
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
-				log.info("IllegalArgumentException error in ObjectInsert");
+				log.info("\nIllegalArgumentException error in ObjectInsert");
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
-				log.info("InvocationTargetException error in ObjectInsert");
+				log.info("\nInvocationTargetException error in ObjectInsert");
 			}
 			return true;
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.info("SQLException error in ObjectInsert");
+			log.info("\nSQLException error in ObjectInsert");
 		}
 		return false;
 	}

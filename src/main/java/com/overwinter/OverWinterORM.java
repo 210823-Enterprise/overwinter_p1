@@ -42,11 +42,11 @@ public class OverWinterORM {
 		try {
 			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
-			log.info("New OverWinterORM launched:"+this);
+			log.info("\nNew OverWinterORM launched:"+this);
 		} catch (SQLException e) {
-			log.info("SQLException thrown in OverwinterDataSource");
+			log.info("\nSQLException thrown in OverwinterDataSource");
 		} catch (Exception e) {
-			log.info("General Exception thrown in OverwinterDataSource");
+			log.info("\nGeneral Exception thrown in OverwinterDataSource");
 		}
 	}
 
@@ -63,7 +63,7 @@ public class OverWinterORM {
 
 	}
 
-	public Optional<List<Object>> getListObjectFromDB(Object obj) {
+	public Optional<List<Object>> getListObjectFromDB(Object obj) throws InstantiationException, IllegalAccessException {
 		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
