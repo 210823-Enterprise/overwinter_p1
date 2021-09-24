@@ -136,14 +136,14 @@ public class ObjectGetter extends ObjectMapper {
 			List<Object> listObjects) {
 		Object c = null;
 		Constructor<?> constuct = model.getConstructor();
-
-		if (primekeyIncluded)
 			try {
 				c = constuct.newInstance();
-				Method m = model.getSetterMethod(primaryKey);
-				m.invoke(c, rs.getInt(primaryKey));
+				if (primekeyIncluded) {
+					Method m = model.getSetterMethod(primaryKey);
+					m.invoke(c, rs.getInt(primaryKey));
+				}
 				for (String cf : columnArray) {
-					m = model.getSetterMethod(cf);
+					Method m = model.getSetterMethod(cf);
 					String parType = model.getSetterMethod(cf).getParameterTypes()[0].getSimpleName();
 					Object output = getByType(parType, rs, cf);
 					m.invoke(c, output);
@@ -157,9 +157,7 @@ public class ObjectGetter extends ObjectMapper {
 				log.error(primaryKey + "was unable to be gotten");
 				e.printStackTrace();
 			}
-
 		listObjects.add(c);
-		System.out.println(c);
 		log.info(c + " has been added to the list of objects grabbed from database");
 		return listObjects;
 	}
@@ -182,7 +180,6 @@ public class ObjectGetter extends ObjectMapper {
 			for (int i3 = 0; i3 < conditionsArray.length; i3++) {
 				pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(i3 + 1), conditionsArray[i3], i3 + 1);
 			}
-			System.out.println(pstmt);
 			log.info("\nPrepared Statment " + pstmt + " is about to query the database");
 			ResultSet rs = pstmt.executeQuery();
 
