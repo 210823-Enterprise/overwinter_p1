@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +22,20 @@ import com.overwinter.objectMapper.ObjectRemover;
 import com.overwinter.objectMapper.ObjectTabler;
 import com.overwinter.objectMapper.ObjectUpdate;
 import com.overwinter.transaction.Transaction;
+import com.overwinter.util.MetaModel;
 
 public class ObjectGetterTest {
 	private OverWinterORM mockorm;
 	private ObjectGetter object_getter;
 	private Connection mockconn;
-	
+	private ResultSet mockrs;
+	private MetaModel<?> model;
 	@Before
 	public void setUp() {
 		mockorm = mock(OverWinterORM.class);
 		object_getter = ObjectGetter.getInstance();
 		mockconn = mock(Connection.class);
+		 = mock(ResultSet.class);
 	}
 	
 	@After 
@@ -42,11 +46,11 @@ public class ObjectGetterTest {
 	}
 	
 	@Test
-	public void testDeleteObjFromDB() {
-		Tester test = new Tester(1, "Kirk", "Hahn");
-		mockconn.createStatement().executeQuery(" ").getInt(0);
-		when(mockobject_remover.removeObjectFromDb(test, mockconn)).thenReturn(true);
-		
+	public void testcreateSimpleObject() {
+		Tester test = new Tester(0, "Kirk", "Hahn");
+		String primarykey="test_id";
+		when(mockrs.getInt(primarykey)).thenReturn(1);
+		Method m = mock(object_getter.get)
 		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
 		
 		assertEquals(true, t);
