@@ -22,7 +22,7 @@ public class ObjectInsert extends ObjectMapper {
 		int numberOfColumn = 0;
 		// Loop through to see how many columns do we need to update
 		for(ColumnField field : model.getColumns()) {
-			// If the columnName isn't empty 
+			// If the columnName isn't empty
 			if(field.getColumnName() != "") {
 				numberOfColumn++;
 			}
@@ -34,7 +34,7 @@ public class ObjectInsert extends ObjectMapper {
 		// loop through everything
 		int columnCounter = 0;
 		for(ColumnField field : model.getColumns()) {
-			// If the columnName isn't empty 
+			// If the columnName isn't empty
 			if(field.getColumnName() != "") {
 				columnCounter++;
 				// set the column = value
@@ -67,9 +67,9 @@ public class ObjectInsert extends ObjectMapper {
 			ParameterMetaData pd = statement.getParameterMetaData();
 			int counter = 1;
 			for(ColumnField field : model.getColumns()) {
-				// If the columnName isn't empty 
+				// If the columnName isn't empty
 //				for(int i = 1; i < testing + 1; i++) {
-					
+
 					statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);
 					counter++;
 //				}
@@ -91,7 +91,7 @@ public class ObjectInsert extends ObjectMapper {
 				log.info("\nInvocationTargetException error in ObjectInsert");
 			}
 			return true;
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			log.info("\nSQLException error in ObjectInsert");

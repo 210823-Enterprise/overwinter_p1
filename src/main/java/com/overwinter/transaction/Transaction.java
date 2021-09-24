@@ -8,12 +8,12 @@ import java.sql.Savepoint;
 public class Transaction {
 	static Transaction transaction = new Transaction();
 	static Savepoint savepoint = null;
-	
+
 	private Transaction() {
 		super();
-		
+
 	}
-	
+
 	public static Savepoint getSavepoint() {
 		return savepoint;
 	}
@@ -31,7 +31,7 @@ public class Transaction {
 		}
 		return getInstance();
 	}
-	
+
 	public Transaction commit(Connection conn) {
 		try {
 			conn.commit();
@@ -41,7 +41,7 @@ public class Transaction {
 		}
 		return getInstance();
 	}
-	
+
 	public Transaction rollBack(Connection conn) {
 		try {
 			conn.rollback();
@@ -51,7 +51,7 @@ public class Transaction {
 		}
 		return getInstance();
 	}
-	
+
 	public Transaction rollBackWithSpecificSavePoint(Connection conn, Savepoint savepoint) {
 		try {
 			conn.rollback(savepoint);
@@ -61,7 +61,7 @@ public class Transaction {
 		}
 		return getInstance();
 	}
-	
+
 	public Transaction setSavePoint(Connection conn) {
 		try {
 			savepoint = conn.setSavepoint();
@@ -76,7 +76,7 @@ public class Transaction {
 
 	public Transaction setSavePointWithName(Connection conn, String name) {
 		try {
-			
+
 			savepoint = conn.setSavepoint(name);
 //			return savepoint;
 		} catch (SQLException e) {
@@ -86,7 +86,7 @@ public class Transaction {
 //		throw new NoSavePoint("Can't make a save point");
 		return getInstance();
 	}
-	
+
 	public static Transaction getInstance() {
 		return transaction;
 	}

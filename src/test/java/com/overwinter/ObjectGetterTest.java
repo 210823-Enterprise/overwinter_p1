@@ -1,30 +1,16 @@
 package com.overwinter;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.dummyModels.Tester;
-import com.overwinter.objectMapper.ObjectCache;
 import com.overwinter.objectMapper.ObjectGetter;
-import com.overwinter.objectMapper.ObjectInsert;
-import com.overwinter.objectMapper.ObjectRemover;
-import com.overwinter.objectMapper.ObjectTabler;
-import com.overwinter.objectMapper.ObjectUpdate;
-import com.overwinter.transaction.Transaction;
 import com.overwinter.util.MetaModel;
 
 public class ObjectGetterTest {

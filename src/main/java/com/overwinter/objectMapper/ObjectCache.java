@@ -2,8 +2,6 @@ package com.overwinter.objectMapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,9 +10,6 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 import com.overwinter.OverWinterORM;
-import com.overwinter.config.OverwinterDataSource;
-import com.overwinter.dummyModels.Tester;
-import com.overwinter.util.Configuration;
 import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
@@ -63,7 +58,7 @@ public class ObjectCache {
 		}
 
 		this.cache.put(o.getClass(), hSet);
-		
+
 		cache.forEach((k, v) -> log.info("\nUPDATE PER CRUD Key " + k + " Value " + v));
 		return getInstance();
 	}

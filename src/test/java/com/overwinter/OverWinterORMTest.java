@@ -5,11 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import org.checkerframework.common.reflection.qual.ForName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +29,7 @@ public class OverWinterORMTest {
 	private Transaction mocktransaction;
 	private ObjectCache mockobject_cache;
 	private Connection mockconn;
-	
+
 	@Before
 	public void setUp() {
 		orm = OverWinterORM.getInstance();
@@ -47,8 +43,8 @@ public class OverWinterORMTest {
 		mockconn = mock(Connection.class);
 		orm.conn=mockconn;
 	}
-	
-	@After 
+
+	@After
 	public void tearDown() {
 		orm = null;
 		mockobject_remover = null;
@@ -59,18 +55,18 @@ public class OverWinterORMTest {
 		mocktransaction = null;
 		mockobject_cache = null;
 	}
-	
+
 	@Test
 	public void testDeleteObjFromDB() {
 		Tester test = new Tester(1, "Kirk", "Hahn");
-		
+
 		when(mockobject_remover.removeObjectFromDb(test, mockconn)).thenReturn(true);
-		
+
 		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
-		
+
 		assertEquals(true, t);
 	}
-	
+
 //	@Test
 //	public void testGetListObjectFromDB() {
 //		Tester test = new Tester(1, "Kirk", "Hahn");

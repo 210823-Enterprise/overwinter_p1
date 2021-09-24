@@ -1,7 +1,7 @@
 package com.overwinter;
 
-import com.overwinter.transaction.Transaction;
 import com.overwinter.dummyModels.Tester;
+import com.overwinter.transaction.Transaction;
 import com.overwinter.util.Configuration;
 
 public class ORM_Driver {
@@ -9,15 +9,12 @@ public class ORM_Driver {
 		Configuration cfg = new Configuration();
 		cfg.addAnnotatedClass(Tester.class);
 		// GET THE ORM UP AND RUNNING
-		System.out.println("asdv");
 		OverWinterORM orm = OverWinterORM.getInstance();
-		System.out.println("asdv");
-		orm.addTabletoDb(Tester.class); // <-- 
-		System.out.println("asdv");
+		orm.addTabletoDb(Tester.class); // <--
 		Tester test = new Tester("Kirk", "Hahn");
 		Tester test2 = new Tester("Thinh", "Pham");
 		Tester test3 = new Tester("Joel", "Wiegand");
-		
+
 		orm.beginTransaction();
 		orm.insertObjIntoDB(test); // KIRK inserted
 		orm.setSavePointWithName("testing"); // set save point
@@ -31,6 +28,6 @@ public class ORM_Driver {
 		orm.updateObjFromDB(test2);
 		orm.putObjectInCache(test2); // THIS WILL BE SKINN BOI!!!!
 		// this SHOULD return the whole cache including update version of id2 = skinny boi
-		
+
 	}
 }
