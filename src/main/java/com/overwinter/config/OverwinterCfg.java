@@ -5,8 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 public class OverwinterCfg {
- 
+	static Logger log = Logger.getLogger(OverwinterCfg.class);
 	private static String driver;
 	private static String url;
 	private static String username;
@@ -40,36 +42,8 @@ public class OverwinterCfg {
 		this.password = password;
 		this.poolSize = poolSize;
 		this.driver = driver;
+		log.info("new OverwinterCfg created: "+this);
 	}
-
-	// Im not sure what OverwinterCfg.poolSize means
-
-//	public static void setPoolSize(int poolSize) {
-//		OverwinterCfg.poolSize = poolSize;
-//	}
-//	
-//	public static void setDriver(String driver) {
-//	OverwinterCfg.driver = driver;
-//}
-//	
-//	public void setUsername(String username) {
-//		this.username = username;
-//	}
-//	
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
-//
-//	public void setUrl(String url) {
-//		this.url = url;
-//	}
-
-	// Commented out toString() method since we only use this class to extract info
-//	@Override
-//	public String toString() {
-//		return "OverwinterCfg []";
-//	}
-
 	/**
 	 * This will allow us to extract properties values from file path
 	 * 
@@ -100,6 +74,7 @@ public class OverwinterCfg {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		log.warn("OverwinterCfg.configure() returned null");
 		return null;
 	}
 
