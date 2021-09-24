@@ -110,12 +110,15 @@ public class ObjectGetter extends ObjectMapper {
 		for (int i = 0; i < columnArray.length; i++) {
 			// If the columnName isn't empty
 			if (i > 0) {
-				sql += " ,";
+				sql += ", ";
 			}
 			if (columnArray[i].trim().toLowerCase().equals(primaryKey)) {
 				primekeyIncluded = true;
 			}
 			sql += columnArray[i].trim().toLowerCase();
+		}
+		if (!primekeyIncluded) {
+			sql += ", " + primaryKey.trim().toLowerCase();
 		}
 		// 2,3,5,all,1
 		sql += " FROM " + clazz.getSimpleName().toLowerCase();
@@ -132,31 +135,29 @@ public class ObjectGetter extends ObjectMapper {
 		return sql;
 	}
 
-	public List<Object> constructComplexObject(MetaModel<?> model, String primaryKey, ResultSet rs, String[] columnArray,
-			List<Object> listObjects) {
+	public List<Object> constructComplexObject(MetaModel<?> model, String primaryKey, ResultSet rs,
+			String[] columnArray, List<Object> listObjects) {
 		Object c = null;
 		Constructor<?> constuct = model.getConstructor();
-			try {
-				c = constuct.newInstance();
-				if (primekeyIncluded) {
-					Method m = model.getSetterMethod(primaryKey);
-					m.invoke(c, rs.getInt(primaryKey));
-				}
-				for (String cf : columnArray) {
-					Method m = model.getSetterMethod(cf);
-					String parType = model.getSetterMethod(cf).getParameterTypes()[0].getSimpleName();
-					Object output = getByType(parType, rs, cf);
-					m.invoke(c, output);
-				}
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				log.error(c
-						+ " does not have access to the definition of the specified class, field, method or constructor");
-			} catch (InstantiationException e) {
-				log.error(constuct + "cannot be instantiated");
-			} catch (SQLException e) {
-				log.error(primaryKey + "was unable to be gotten");
-				e.printStackTrace();
+		try {
+			c = constuct.newInstance();
+			Method m = model.getSetterMethod(primaryKey);
+			m.invoke(c, rs.getInt(primaryKey));
+			for (String cf : columnArray) {
+				m = model.getSetterMethod(cf);
+				String parType = model.getSetterMethod(cf).getParameterTypes()[0].getSimpleName();
+				Object output = getByType(parType, rs, cf);
+				m.invoke(c, output);
 			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			log.error(
+					c + " does not have access to the definition of the specified class, field, method or constructor");
+		} catch (InstantiationException e) {
+			log.error(constuct + "cannot be instantiated");
+		} catch (SQLException e) {
+			log.error(primaryKey + "was unable to be gotten");
+			e.printStackTrace();
+		}
 		listObjects.add(c);
 		log.info(c + " has been added to the list of objects grabbed from database");
 		return listObjects;
