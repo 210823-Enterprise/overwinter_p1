@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectGetter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.objectMapper</a> &gt; <span class="el_source">ObjectGetter.java</span></div><h1>ObjectGetter.java</h1><pre class="source lang-java linenums">package com.overwinter.objectMapper;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.log4j.Logger;
+
+import com.overwinter.util.ColumnField;
+import com.overwinter.util.MetaModel;
+
+<span class="fc" id="L21">public class ObjectGetter extends ObjectMapper {</span>
+<span class="fc" id="L22">	static ObjectGetter oG = new ObjectGetter();</span>
+<span class="fc" id="L23">	private static Logger log = Logger.getLogger(ObjectGetter.class);</span>
+<span class="fc" id="L24">	boolean primekeyIncluded = false;</span>
+
+	public List&lt;Object&gt; createSimpleObject(MetaModel&lt;?&gt; model, ResultSet rs, String primaryKey,
+			List&lt;Object&gt; listObjects) {
+		try {
+<span class="nc" id="L29">			List&lt;ColumnField&gt; columnFields = model.getColumns();</span>
+<span class="nc" id="L30">			Constructor&lt;?&gt; constuct = model.getConstructor();</span>
+<span class="nc" id="L31">			Object c = constuct.newInstance();</span>
+<span class="nc" id="L32">			log.info(&quot;\nnew Instance created&quot;);</span>
+<span class="nc" id="L33">			Method m = model.getSetterMethod(primaryKey);</span>
+<span class="nc" id="L34">			m.invoke(c, rs.getInt(primaryKey));</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">			for (ColumnField cf : columnFields) {</span>
+<span class="nc" id="L36">				m = model.getSetterMethod(cf.getColumnName());</span>
+<span class="nc" id="L37">				String parType = model.getSetterMethod(cf.getColumnName()).getParameterTypes()[0].getSimpleName();</span>
+<span class="nc" id="L38">				Object output = getByType(parType, rs, cf.getColumnName());</span>
+<span class="nc" id="L39">				m.invoke(c, output);</span>
+<span class="nc" id="L40">			}</span>
+<span class="nc" id="L41">			listObjects.add(c);</span>
+<span class="nc" id="L42">			log.info(c + &quot; added to list of objects in getListObjectFromDB() &quot;);</span>
+<span class="nc" id="L43">			return listObjects;</span>
+<span class="nc" id="L44">		} catch (InstantiationException e1) {</span>
+<span class="nc" id="L45">			log.error(&quot;\nInstantiation Exception in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L46">		} catch (IllegalAccessException e1) {</span>
+<span class="nc" id="L47">			log.error(&quot;\nIllegal Access Exception in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L48">		} catch (InvocationTargetException e1) {</span>
+<span class="nc" id="L49">			log.error(&quot;\nInvocation Target Exception in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L50">		} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L51">			log.error(&quot;\nInvocation Target Exception in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L52">		} catch (SQLException e) {</span>
+<span class="nc" id="L53">			log.error(&quot;\nInvocation Target Exception in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L54">		}</span>
+<span class="nc" id="L55">		return listObjects;</span>
+	}
+
+	public Optional&lt;List&lt;Object&gt;&gt; getListObjectFromDB(final Class&lt;?&gt; clazz, Connection conn) {
+<span class="nc" id="L59">		MetaModel&lt;?&gt; model = MetaModel.of(clazz);</span>
+<span class="nc" id="L60">		String primaryKey = model.getPrimaryKey().getColumnName();</span>
+<span class="nc" id="L61">		String sql = &quot;SELECT * FROM &quot; + clazz.getSimpleName().toLowerCase() + &quot;;&quot;;</span>
+<span class="nc" id="L62">		List&lt;Object&gt; listObjects = new ArrayList&lt;&gt;();</span>
+		Statement stmt;
+		try {
+<span class="nc" id="L65">			stmt = conn.createStatement();</span>
+<span class="nc" id="L66">			ResultSet rs = stmt.executeQuery(sql);</span>
+<span class="nc" id="L67">			log.info(sql + &quot; has been executed against database&quot;);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L69">				listObjects = createSimpleObject(model, rs, primaryKey, listObjects);</span>
+
+			}
+<span class="nc" id="L72">		} catch (SQLException e) {</span>
+<span class="nc" id="L73">			log.error(&quot;\nSQLException in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L74">		} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L75">			log.error(&quot;\nbad argument in getListObjectFromDB()&quot;);</span>
+<span class="nc" id="L76">		}</span>
+<span class="nc" id="L77">		return Optional.of(listObjects);</span>
+
+	}
+
+	public String[] createColumnArray(String columns) {
+<span class="nc" id="L82">		String[] columnArray = new String[0];</span>
+<span class="nc bnc" id="L83" title="All 4 branches missed.">		if (columns != null &amp;&amp; columns.length() &gt; 0) {</span>
+<span class="nc" id="L84">			columnArray = columns.split(&quot;,&quot;);</span>
+		}
+<span class="nc" id="L86">		return columnArray;</span>
+	}
+
+	public String[] createConditionsArray(String condition) {
+<span class="nc" id="L90">		String[] conditionsArray = new String[0];</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">		if (condition != null &amp;&amp; condition.length() &gt; 0) {</span>
+<span class="nc" id="L92">			conditionsArray = condition.split(&quot;,&quot;);</span>
+		}
+<span class="nc" id="L94">		return conditionsArray;</span>
+	}
+
+	public String[] createOperatorsArray(String operator) {
+<span class="nc" id="L98">		String[] operatorsArray = new String[0];</span>
+<span class="nc bnc" id="L99" title="All 4 branches missed.">		if (operator != null &amp;&amp; operator.length() &gt; 0) {</span>
+<span class="nc" id="L100">			operatorsArray = operator.split(&quot;,&quot;);</span>
+		}
+<span class="nc" id="L102">		return operatorsArray;</span>
+	}
+
+	public String createSQL(String[] columnArray, String[] conditionsArray, String[] operatorsArray, Class&lt;?&gt; clazz,
+			String primaryKey) {
+<span class="fc" id="L107">		String sql = &quot;SELECT &quot;;</span>
+<span class="fc" id="L108">		log.info(&quot;\nColumns:&quot; + columnArray + &quot; conditions: &quot; + conditionsArray + &quot; operators: &quot; + operatorsArray);</span>
+
+<span class="fc bfc" id="L110" title="All 2 branches covered.">		for (int i = 0; i &lt; columnArray.length; i++) {</span>
+			// If the columnName isn't empty
+<span class="fc bfc" id="L112" title="All 2 branches covered.">			if (i &gt; 0) {</span>
+<span class="fc" id="L113">				sql += &quot; ,&quot;;</span>
+			}
+<span class="fc bfc" id="L115" title="All 2 branches covered.">			if (columnArray[i].trim().toLowerCase().equals(primaryKey)) {</span>
+<span class="fc" id="L116">				primekeyIncluded = true;</span>
+			}
+<span class="fc" id="L118">			sql += columnArray[i].trim().toLowerCase();</span>
+		}
+		// 2,3,5,all,1
+<span class="fc" id="L121">		sql += &quot; FROM &quot; + clazz.getSimpleName().toLowerCase();</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">		if (conditionsArray.length &gt; 0)</span>
+<span class="fc" id="L123">			sql += &quot; WHERE &quot;;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">		for (int i2 = 0; i2 &lt; conditionsArray.length; i2++) {</span>
+			// If the columnName isn't empty
+<span class="fc bfc" id="L126" title="All 2 branches covered.">			if (i2 &gt; 0) {</span>
+<span class="fc" id="L127">				sql += &quot; AND &quot;;</span>
+			}
+<span class="fc" id="L129">			sql += columnArray[i2].trim().toLowerCase() + &quot;=&quot; + &quot;?&quot;;</span>
+		}
+<span class="fc" id="L131">		sql += &quot;;&quot;;</span>
+<span class="fc" id="L132">		return sql;</span>
+	}
+
+	public List&lt;Object&gt; constructComplexObject(MetaModel&lt;?&gt; model, String primaryKey, ResultSet rs, String[] columnArray,
+			List&lt;Object&gt; listObjects) {
+<span class="nc" id="L137">		Object c = null;</span>
+<span class="nc" id="L138">		Constructor&lt;?&gt; constuct = model.getConstructor();</span>
+
+<span class="nc bnc" id="L140" title="All 2 branches missed.">		if (primekeyIncluded)</span>
+			try {
+<span class="nc" id="L142">				c = constuct.newInstance();</span>
+<span class="nc" id="L143">				Method m = model.getSetterMethod(primaryKey);</span>
+<span class="nc" id="L144">				m.invoke(c, rs.getInt(primaryKey));</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">				for (String cf : columnArray) {</span>
+<span class="nc" id="L146">					m = model.getSetterMethod(cf);</span>
+<span class="nc" id="L147">					String parType = model.getSetterMethod(cf).getParameterTypes()[0].getSimpleName();</span>
+<span class="nc" id="L148">					Object output = getByType(parType, rs, cf);</span>
+<span class="nc" id="L149">					m.invoke(c, output);</span>
+				}
+<span class="nc" id="L151">			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {</span>
+<span class="nc" id="L152">				log.error(c</span>
+						+ &quot; does not have access to the definition of the specified class, field, method or constructor&quot;);
+<span class="nc" id="L154">			} catch (InstantiationException e) {</span>
+<span class="nc" id="L155">				log.error(constuct + &quot;cannot be instantiated&quot;);</span>
+<span class="nc" id="L156">			} catch (SQLException e) {</span>
+<span class="nc" id="L157">				log.error(primaryKey + &quot;was unable to be gotten&quot;);</span>
+<span class="nc" id="L158">				e.printStackTrace();</span>
+<span class="nc" id="L159">			}</span>
+
+<span class="nc" id="L161">		listObjects.add(c);</span>
+<span class="nc" id="L162">		System.out.println(c);</span>
+<span class="nc" id="L163">		log.info(c + &quot; has been added to the list of objects grabbed from database&quot;);</span>
+<span class="nc" id="L164">		return listObjects;</span>
+	}
+
+	public Optional&lt;List&lt;Object&gt;&gt; getListObjectFromDB(final Class&lt;?&gt; clazz, Connection conn, final String columns,
+			final String conditions, final String operators) {
+<span class="nc" id="L169">		MetaModel&lt;?&gt; model = MetaModel.of(clazz);</span>
+<span class="nc" id="L170">		String[] columnArray = createColumnArray(columns);</span>
+<span class="nc" id="L171">		String[] conditionsArray = createConditionsArray(conditions);</span>
+<span class="nc" id="L172">		String[] operatorsArray = createOperatorsArray(operators);</span>
+<span class="nc" id="L173">		String primaryKey = model.getPrimaryKey().getColumnName().toLowerCase();</span>
+<span class="nc" id="L174">		String sql = createSQL(columnArray, conditionsArray, operatorsArray, clazz, primaryKey);</span>
+<span class="nc" id="L175">		log.info(sql + &quot; is about to query the database&quot;);</span>
+<span class="nc" id="L176">		List&lt;Object&gt; listObjects = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L177">		PreparedStatement pstmt = null;</span>
+
+		try {
+<span class="nc" id="L180">			pstmt = conn.prepareStatement(sql);</span>
+<span class="nc" id="L181">			ParameterMetaData pd = pstmt.getParameterMetaData();</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">			for (int i3 = 0; i3 &lt; conditionsArray.length; i3++) {</span>
+<span class="nc" id="L183">				pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(i3 + 1), conditionsArray[i3], i3 + 1);</span>
+			}
+<span class="nc" id="L185">			System.out.println(pstmt);</span>
+<span class="nc" id="L186">			log.info(&quot;\nPrepared Statment &quot; + pstmt + &quot; is about to query the database&quot;);</span>
+<span class="nc" id="L187">			ResultSet rs = pstmt.executeQuery();</span>
+
+<span class="nc bnc" id="L189" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L190">				listObjects = constructComplexObject(model, primaryKey, rs, columnArray, listObjects);</span>
+			}
+<span class="nc" id="L192">		} catch (SQLException e2) {</span>
+<span class="nc" id="L193">			log.error(&quot;\nSQLException exception from complex getObjectFromDB&quot;);</span>
+<span class="nc" id="L194">		} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L195">			log.error(&quot;\nIllegalArgumentException exception from complex getObjectFromDB&quot;);</span>
+<span class="nc" id="L196">		}</span>
+<span class="nc" id="L197">		log.info(listObjects + &quot; is being returned from complex getListObjectFromDB&quot;);</span>
+<span class="nc" id="L198">		return Optional.of(listObjects);</span>
+	}
+
+	public static ObjectGetter getInstance() {
+<span class="fc" id="L202">		return oG;</span>
+	}
+
+	protected Object getByType(String type, ResultSet rs, String columnName) {
+		try {
+<span class="nc bnc" id="L207" title="All 8 branches missed.">			switch (type) {</span>
+			case &quot;String&quot;:
+<span class="nc" id="L209">				log.info(&quot;\nString found in ResultSet&quot;);</span>
+<span class="nc" id="L210">				return rs.getString(columnName);</span>
+			case &quot;Integer&quot;:
+<span class="nc" id="L212">				log.info(&quot;\nInteger found in ResultSet&quot;);</span>
+<span class="nc" id="L213">				return rs.getInt(columnName);</span>
+			case &quot;Double&quot;:
+<span class="nc" id="L215">				log.info(&quot;\nDouble found in ResultSet&quot;);</span>
+<span class="nc" id="L216">				return rs.getDouble(columnName);</span>
+			case &quot;int&quot;:
+<span class="nc" id="L218">				log.info(&quot;\nint found in ResultSet&quot;);</span>
+<span class="nc" id="L219">				return rs.getInt(columnName);</span>
+			case &quot;double&quot;:
+<span class="nc" id="L221">				log.info(&quot;\ndouble found in ResultSet&quot;);</span>
+<span class="nc" id="L222">				return rs.getDouble(columnName);</span>
+			case &quot;float&quot;:
+<span class="nc" id="L224">				log.info(&quot;\nfloat found in ResultSet&quot;);</span>
+<span class="nc" id="L225">				return rs.getFloat(columnName);</span>
+			case &quot;Float&quot;:
+<span class="nc" id="L227">				log.info(&quot;\nFloat found in ResultSet&quot;);</span>
+<span class="nc" id="L228">				return rs.getFloat(columnName);</span>
+			}
+<span class="nc" id="L230">			log.error(&quot;\nunknown type found in ResultSet in getByType&quot;);</span>
+<span class="nc" id="L231">			return null;</span>
+<span class="nc" id="L232">		} catch (</span>
+
+		SQLException e) {
+<span class="nc" id="L235">			log.error(&quot;\nSQLException exception from getByType&quot;);</span>
+<span class="nc" id="L236">			return null;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
