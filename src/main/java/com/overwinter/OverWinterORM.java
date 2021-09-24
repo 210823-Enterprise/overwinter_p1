@@ -83,8 +83,8 @@ public class OverWinterORM {
 
 	}
 
-	public void insertObjIntoDB(Object obj) {
-		obj_insert.insertObjectIntoDB(obj, conn);
+	public boolean insertObjIntoDB(Object obj) {
+		return obj_insert.insertObjectIntoDB(obj, conn);
 	}
 
 	public Transaction beginTransaction() {
