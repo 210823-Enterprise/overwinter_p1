@@ -12,7 +12,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectUpdate extends ObjectMapper {
 	static ObjectUpdate objUpdate = new ObjectUpdate();
-	static Logger log = Logger.getLogger(ObjectUpdate.class);
+	private static Logger log = Logger.getLogger(ObjectUpdate.class);
 
 	public boolean updateObjectFromDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
@@ -62,7 +62,7 @@ public class ObjectUpdate extends ObjectMapper {
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.error("SQLException error in ObjectUpdate");
+			log.error("\nSQLException error in ObjectUpdate");
 		}
 		return false;
 	}
