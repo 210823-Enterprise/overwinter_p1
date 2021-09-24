@@ -33,7 +33,7 @@ public class OverWinterORM {
 	private final Transaction transaction = Transaction.getInstance();
 	private final ObjectCache obj_cache = ObjectCache.getInstance();
 	// obj getter, etc.....
-	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/test/resources/test_application.properties"));
+	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/main/resources/application.properties"));
 
 	private OverWinterORM() {
 		try {
