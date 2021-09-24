@@ -19,9 +19,9 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
 	static Logger log = Logger.getLogger(ObjectCache.class);
-	private final HashMap<Class<?>, HashSet<Object>> cache;
+	public final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
-	OverWinterORM orm = OverWinterORM.getInstance();
+	public OverWinterORM orm = OverWinterORM.getInstance();
 
 	private ObjectCache() {
 		super();
