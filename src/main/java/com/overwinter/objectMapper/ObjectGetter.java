@@ -23,7 +23,7 @@ public class ObjectGetter extends ObjectMapper {
 	private static Logger log = Logger.getLogger(ObjectGetter.class);
 	boolean primekeyIncluded = false;
 
-	private List<Object> createSimpleObject(MetaModel<?> model, ResultSet rs, String primaryKey,
+	public List<Object> createSimpleObject(MetaModel<?> model, ResultSet rs, String primaryKey,
 			List<Object> listObjects) {
 		try {
 			List<ColumnField> columnFields = model.getColumns();

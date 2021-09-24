@@ -14,7 +14,7 @@ public class Configuration {
 	public Configuration addAnnotatedClass(Class annotatedClass) {
 
 		if (metaModelList == null) {
-			metaModelList = new LinkedList<MetaModel<Class<?>>>();
+			metaModelList = new LinkedList<>();
 		}
 		metaModelList.add(MetaModel.of(annotatedClass));
 		// of model should transform class into data model to be transposed

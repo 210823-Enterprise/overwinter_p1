@@ -27,7 +27,7 @@ public class OverwinterCfg {
 	/**
 	 * This constructor is for when user want to input the specific or want to at
 	 * the very least want to override
-	 * 
+	 *
 	 * @param driver   model,
 	 * @param url      database,
 	 * @param username for database,
@@ -36,17 +36,17 @@ public class OverwinterCfg {
 	 */
 	public OverwinterCfg(String driver, String url, String username, String password, int poolSize) {
 		super();
-		this.driver = driver;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.poolSize = poolSize;
-		this.driver = driver;
+		OverwinterCfg.driver = driver;
+		OverwinterCfg.url = url;
+		OverwinterCfg.username = username;
+		OverwinterCfg.password = password;
+		OverwinterCfg.poolSize = poolSize;
+		OverwinterCfg.driver = driver;
 		log.info("\nnew OverwinterCfg created: "+this);
 	}
 	/**
 	 * This will allow us to extract properties values from file path
-	 * 
+	 *
 	 * @param filePath
 	 */
 	public OverwinterCfg configure(String filePath) {

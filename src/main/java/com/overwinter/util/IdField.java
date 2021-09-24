@@ -2,7 +2,6 @@ package com.overwinter.util;
 
 import java.lang.reflect.Field;
 
-import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Id;
 
 public class IdField {
@@ -21,7 +20,7 @@ public class IdField {
 	}
 	public String getColumnName() {
 		return field.getAnnotation(Id.class).columnName();
-	
+
 	}
-	
+
 }

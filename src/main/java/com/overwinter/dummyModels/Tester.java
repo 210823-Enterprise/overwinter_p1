@@ -66,6 +66,6 @@ public class Tester {
 	@Override
 	public String toString() {
 		return "Test [id=" + id + ", testUserName=" + testUserName + ", testPassword=" + testPassword + "]";
-	} 
-	
+	}
+
 }
