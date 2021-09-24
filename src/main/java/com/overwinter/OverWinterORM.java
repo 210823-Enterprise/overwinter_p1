@@ -39,11 +39,11 @@ public class OverWinterORM {
 		try {
 			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
-			log.info("\nNew OverWinterORM launched:"+this);
+			log.info("New OverWinterORM launched:"+this);
 		} catch (SQLException e) {
-			log.info("\nSQLException thrown in OverwinterDataSource");
+			log.info("SQLException thrown in OverwinterDataSource");
 		} catch (Exception e) {
-			log.info("\nGeneral Exception thrown in OverwinterDataSource");
+			log.info("General Exception thrown in OverwinterDataSource");
 		}
 	}
 

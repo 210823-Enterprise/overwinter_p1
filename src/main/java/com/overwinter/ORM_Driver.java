@@ -27,7 +27,6 @@ public class ORM_Driver {
 		orm.insertObjIntoDB(test3); // JOEL inserted
 		orm.commit(); // will have KIRK AND JOEL
 
-
 		orm.addAllFromDBToCache(Tester.class); // this will be call the first time so it makes senes but not the 2nd time
 		orm.updateObjFromDB(test2);
 		orm.putObjectInCache(test2); // THIS WILL BE SKINN BOI!!!!
