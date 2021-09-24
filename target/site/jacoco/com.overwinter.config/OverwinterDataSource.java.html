@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OverwinterDataSource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.config</a> &gt; <span class="el_source">OverwinterDataSource.java</span></div><h1>OverwinterDataSource.java</h1><pre class="source lang-java linenums">package com.overwinter.config;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
+
+public class OverwinterDataSource {
+	// If you were doing this in your own project, or in a REAL application use the application.properties file
+	// and the Properties object in Java which you use to READ from that file and supply the credentials
+<span class="fc" id="L15">	private static Logger log = Logger.getLogger(OverwinterDataSource.class);</span>
+<span class="fc" id="L16">	private static String driver = &quot;&quot;;</span>
+<span class="fc" id="L17">	private static String url = &quot;&quot;;</span>
+<span class="fc" id="L18">	private static String username = &quot;&quot;;</span>
+<span class="fc" id="L19">	private static String password = &quot;&quot;;</span>
+<span class="fc" id="L20">	private static int poolsize = 5;</span>
+<span class="fc" id="L21">	private static GenericObjectPool gPool = null;</span>
+	
+	public OverwinterDataSource() {
+<span class="nc" id="L24">		super();</span>
+<span class="nc" id="L25">	}</span>
+
+	public OverwinterDataSource(OverwinterCfg config) {
+<span class="fc" id="L28">		super();</span>
+<span class="fc" id="L29">		driver = config.getDriver();</span>
+<span class="fc" id="L30">		url = config.getUrl();</span>
+<span class="fc" id="L31">		username = config.getUsername();</span>
+<span class="fc" id="L32">		password = config.getPassword();</span>
+<span class="fc" id="L33">		poolsize = config.getPoolSize();</span>
+<span class="fc" id="L34">		log.info(&quot;\nnew OverwitnerDataSource created: &quot;+this);</span>
+<span class="fc" id="L35">	}</span>
+ 	// Apache Common dbcp gives us the functionality to create a connection pool. But we have to do so
+	// by using its specific class and functionality called GenericObjectPool
+	public DataSource setUpPool () throws Exception {
+		// We use the DataSource Interface to create a connection object that
+		// participates in Connection Pooling
+<span class="fc" id="L41">		Class.forName(driver);</span>
+
+		// create an instance of GernericObjectPool that holds our Pool of connections
+		// objects
+<span class="fc" id="L45">		gPool = new GenericObjectPool();</span>
+<span class="fc" id="L46">		gPool.setMaxActive(poolsize);</span>
+
+		// Create a connectionFactory Object which will be used by the pool object to
+		// creates the connections (which are all objects)
+<span class="fc" id="L50">		ConnectionFactory cf = new DriverManagerConnectionFactory(url, username, password);</span>
+
+<span class="fc" id="L52">		PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, gPool, null, null, false, true);</span>
+<span class="fc" id="L53">		log.info(gPool+ &quot; used to create a pool&quot;);</span>
+<span class="fc" id="L54">		return new PoolingDataSource(gPool);</span>
+	}
+
+	public GenericObjectPool getConnectionPool() {
+<span class="nc" id="L58">		return gPool;</span>
+	}
+
+	// for our own benefit lets create a method to print the connection pool status
+	// for now 
+	public void printDbStatus() {
+<span class="nc" id="L64">		System.out.println(&quot;Max: &quot; + getConnectionPool().getMaxActive() + &quot;; Active: &quot;</span>
+<span class="nc" id="L65">				+ getConnectionPool().getNumActive() + &quot;; Idle: &quot; + getConnectionPool().getNumIdle());</span>
+<span class="nc" id="L66">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

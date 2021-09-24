@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.objectMapper</a> &gt; <span class="el_source">ObjectMapper.java</span></div><h1>ObjectMapper.java</h1><pre class="source lang-java linenums">package com.overwinter.objectMapper;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+<span class="fc" id="L9">public abstract class ObjectMapper {</span>
+	
+	protected PreparedStatement setStatement(PreparedStatement pstmt, ParameterMetaData pd, Method getter, Object obj, int index) {
+		
+		try {
+<span class="nc" id="L14">			return setPreparedStatmentByType(pstmt, pd.getParameterTypeName(index), String.valueOf(getter.invoke(obj)), index);</span>
+<span class="nc" id="L15">		} catch (IllegalAccessException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L17">			e.printStackTrace();</span>
+<span class="nc" id="L18">		} catch (IllegalArgumentException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L20">			e.printStackTrace();</span>
+<span class="nc" id="L21">		} catch (InvocationTargetException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L23">			e.printStackTrace();</span>
+<span class="nc" id="L24">		} catch (SQLException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L26">			e.printStackTrace();</span>
+<span class="nc" id="L27">		}</span>
+<span class="nc" id="L28">		return pstmt;</span>
+	}
+	/**
+	 * @param prepeares  statment to set
+	 * @param paramenter type
+	 * @param input      that represents the value to be placed in prepared
+	 * @param index      to place the value at
+	 */
+	protected PreparedStatement setPreparedStatmentByType(PreparedStatement pstmt, String type, String input, int index) {
+		try {
+<span class="nc bnc" id="L38" title="All 9 branches missed.">			switch (type) {</span>
+			case &quot;text&quot;:
+<span class="nc" id="L40">				pstmt.setString(index, input);</span>
+<span class="nc" id="L41">				break;</span>
+			case &quot;String&quot;:
+<span class="nc" id="L43">				pstmt.setString(index, input);</span>
+<span class="nc" id="L44">				break;</span>
+			case &quot;varchar&quot;:
+<span class="nc" id="L46">				pstmt.setString(index, input);</span>
+<span class="nc" id="L47">				break;</span>
+			case &quot;int&quot;:
+<span class="nc" id="L49">				pstmt.setInt(index, Integer.parseInt(input));</span>
+<span class="nc" id="L50">				break;</span>
+			case &quot;int4&quot;:
+<span class="nc" id="L52">				pstmt.setInt(index, Integer.parseInt(input));</span>
+<span class="nc" id="L53">				break;</span>
+			case &quot;int8&quot;:
+<span class="nc" id="L55">				pstmt.setInt(index, Integer.parseInt(input));</span>
+<span class="nc" id="L56">				break;</span>
+			case &quot;double&quot;:
+<span class="nc" id="L58">				pstmt.setDouble(index, Double.parseDouble(input));</span>
+<span class="nc" id="L59">				break;</span>
+			case &quot;numeric&quot;:
+<span class="nc" id="L61">				pstmt.setDouble(index, Double.parseDouble(input));</span>
+				break;
+			}
+<span class="nc" id="L64">			return pstmt;</span>
+<span class="nc" id="L65">		} catch (SQLException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L67">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L69">		return null;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
