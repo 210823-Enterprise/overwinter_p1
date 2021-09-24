@@ -14,9 +14,9 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
 	private static Logger log = Logger.getLogger(ObjectCache.class);
-	public final HashMap<Class<?>, HashSet<Object>> cache;
+	private final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
-	public OverWinterORM orm = OverWinterORM.getInstance();
+	private OverWinterORM orm = OverWinterORM.getInstance();
 
 	private ObjectCache() {
 		super();
@@ -24,7 +24,7 @@ public class ObjectCache {
 	}
 
 	// we call this method after the first time
-	public ObjectCache putObjectInCache(Object o) {
+	public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object o) {
 		// set to that cache object
 		HashSet<Object> hSet = cache.get(o.getClass());
 		int pk = 0;
@@ -60,10 +60,10 @@ public class ObjectCache {
 		this.cache.put(o.getClass(), hSet);
 
 		cache.forEach((k, v) -> log.info("\nUPDATE PER CRUD Key " + k + " Value " + v));
-		return getInstance();
+		return cache;
 	}
 
-	public boolean addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
+	public HashMap<Class<?>, HashSet<Object>> addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
 
 		// new hashset every time user log in
 		HashSet<Object> hSet = new HashSet<>();
@@ -73,7 +73,12 @@ public class ObjectCache {
 		}
 		this.cache.put(clazz, hSet);
 		cache.forEach((k, v) -> log.info("\nFIRST TIME CACHE Key " + k + " Value " + v));
-		return true;
+		return cache;
+	}
+	
+
+	public HashMap<Class<?>, HashSet<Object>> getCache() {
+		return cache;
 	}
 
 	public static ObjectCache getInstance() {

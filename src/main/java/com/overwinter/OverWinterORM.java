@@ -3,6 +3,8 @@ package com.overwinter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class OverWinterORM {
 	private final Transaction transaction = Transaction.getInstance();
 	private final ObjectCache obj_cache = ObjectCache.getInstance();
 	// obj getter, etc.....
-	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/test/resources/test_application.properties"));
+	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/main/resources/application.properties"));
 
 	private OverWinterORM() {
 		try {
@@ -83,8 +85,8 @@ public class OverWinterORM {
 
 	}
 
-	public void insertObjIntoDB(Object obj) {
-		obj_insert.insertObjectIntoDB(obj, conn);
+	public boolean insertObjIntoDB(Object obj) {
+		return obj_insert.insertObjectIntoDB(obj, conn);
 	}
 
 	public Transaction beginTransaction() {
@@ -112,13 +114,13 @@ public class OverWinterORM {
 		return transaction.setSavePointWithName(conn, name);
 	}
 
-	public boolean addAllFromDBToCache(final Class<?> clazz) {
+	public HashMap<Class<?>, HashSet<Object>> addAllFromDBToCache(final Class<?> clazz) {
 		// this method will call the first time user login
 		Optional<List<Object>> list = obj_getter.getListObjectFromDB(clazz, conn);
 		return obj_cache.addAllFromDBToCache(clazz, list);
 	}
 
-	public ObjectCache putObjectInCache(Object obj) {
+	public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object obj) {
 		return obj_cache.putObjectInCache(obj);
 	}
 
@@ -126,6 +128,8 @@ public class OverWinterORM {
 		return transaction;
 	}
 
-
+	public HashSet<Object> getCache(Class<?> clazz) {
+		return obj_cache.getCache().get(clazz);
+	}
 
 }
