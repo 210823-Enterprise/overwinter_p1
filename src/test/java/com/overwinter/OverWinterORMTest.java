@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.checkerframework.common.reflection.qual.ForName;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,7 @@ public class OverWinterORMTest {
 		mocktransaction = mock(Transaction.class);
 		mockobject_cache = mock(ObjectCache.class);
 		mockconn = mock(Connection.class);
+		orm.conn=mockconn;
 	}
 	
 	@After 
@@ -56,7 +58,6 @@ public class OverWinterORMTest {
 		mockobject_insert = null;
 		mocktransaction = null;
 		mockobject_cache = null;
-		mockconn = null;
 	}
 	
 	@Test

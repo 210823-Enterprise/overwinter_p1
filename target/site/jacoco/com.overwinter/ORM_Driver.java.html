@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ORM_Driver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter</a> &gt; <span class="el_source">ORM_Driver.java</span></div><h1>ORM_Driver.java</h1><pre class="source lang-java linenums">package com.overwinter;
+
+import com.overwinter.transaction.Transaction;
+import com.overwinter.dummyModels.Tester;
+import com.overwinter.util.Configuration;
+
+<span class="nc" id="L7">public class ORM_Driver {</span>
+	public static void main(String[] args) {
+<span class="nc" id="L9">		Configuration cfg = new Configuration();</span>
+<span class="nc" id="L10">		cfg.addAnnotatedClass(Tester.class);</span>
+		// GET THE ORM UP AND RUNNING
+<span class="nc" id="L12">		System.out.println(&quot;asdv&quot;);</span>
+<span class="nc" id="L13">		OverWinterORM orm = OverWinterORM.getInstance();</span>
+<span class="nc" id="L14">		System.out.println(&quot;asdv&quot;);</span>
+<span class="nc" id="L15">		orm.addTabletoDb(Tester.class); // &lt;-- </span>
+<span class="nc" id="L16">		System.out.println(&quot;asdv&quot;);</span>
+<span class="nc" id="L17">		Tester test = new Tester(&quot;Kirk&quot;, &quot;Hahn&quot;);</span>
+<span class="nc" id="L18">		Tester test2 = new Tester(&quot;Thinh&quot;, &quot;Pham&quot;);</span>
+<span class="nc" id="L19">		Tester test3 = new Tester(&quot;Joel&quot;, &quot;Wiegand&quot;);</span>
+		
+<span class="nc" id="L21">		orm.beginTransaction();</span>
+<span class="nc" id="L22">		orm.insertObjIntoDB(test); // KIRK inserted</span>
+<span class="nc" id="L23">		orm.setSavePointWithName(&quot;testing&quot;); // set save point</span>
+<span class="nc" id="L24">		orm.insertObjIntoDB(test2); // THINH &lt;--- THIS ONE WILL BE INSERTED</span>
+<span class="nc" id="L25">		orm.rollBackWithSpecificSavePoint(Transaction.getSavepoint()); // ROLL</span>
+<span class="nc" id="L26">		orm.insertObjIntoDB(test3); // JOEL inserted</span>
+<span class="nc" id="L27">		orm.commit(); // will have KIRK AND JOEL</span>
+
+
+<span class="nc" id="L30">		orm.addAllFromDBToCache(Tester.class); // this will be call the first time so it makes senes but not the 2nd time</span>
+<span class="nc" id="L31">		orm.updateObjFromDB(test2);</span>
+<span class="nc" id="L32">		orm.putObjectInCache(test2); // THIS WILL BE SKINN BOI!!!!</span>
+		// this SHOULD return the whole cache including update version of id2 = skinny boi
+		
+<span class="nc" id="L35">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

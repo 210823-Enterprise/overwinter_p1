@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaConstructor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.util</a> &gt; <span class="el_source">MetaConstructor.java</span></div><h1>MetaConstructor.java</h1><pre class="source lang-java linenums">
+package com.overwinter.util;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import com.overwinter.annotations.Entity;
+import com.overwinter.annotations.Getter;
+import com.overwinter.annotations.Id;
+import com.overwinter.annotations.Setter;
+
+/**
+ * Class which constructs metamodels from annotated classes.
+ */
+public class MetaConstructor {
+
+<span class="nc" id="L18">	private static final MetaConstructor constructor = new MetaConstructor();</span>
+	private final HashMap&lt;String, MetaModel&lt;?&gt;&gt; models;
+
+	private MetaConstructor() {
+<span class="nc" id="L22">		super();</span>
+<span class="nc" id="L23">		models = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L24">	}</span>
+
+	public static MetaConstructor getInstance() {
+<span class="nc" id="L27">		return constructor;</span>
+	}
+
+	/**
+	 * returns HashMap containing all the metamodels so far constructed.
+	 * 
+	 * @return HashMap of metamodels created. key is string of class name, value is
+	 *         metamodel object.
+	 */
+	public HashMap&lt;String, MetaModel&lt;?&gt;&gt; getModels() {
+<span class="nc" id="L37">		return models;</span>
+	}
+
+	/**
+	 *
+	 * @param clazz class to get class name of.
+	 * @return string of class name.
+	 */
+	private String getClassName(final Class&lt;?&gt; clazz) {
+<span class="nc" id="L46">		return clazz.getSimpleName();</span>
+	}
+
+	/**
+	 * Returns all annotated getters of given class
+	 * 
+	 * @param clazz class to get getters from.
+	 * @return Array of getter methods.
+	 */
+	private Method[] getGetters(final Class&lt;?&gt; clazz) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">		return Arrays.stream(clazz.getDeclaredMethods()).filter(m -&gt; m.getDeclaredAnnotation(Getter.class) != null)</span>
+<span class="nc" id="L57">				.toArray(Method[]::new);</span>
+	}
+
+	/**
+	 * Returns all annotated setters of given class
+	 * 
+	 * @param clazz class to get setters from.
+	 * @return Array of setter methods.
+	 */
+	private Method[] getSetters(final Class&lt;?&gt; clazz) {
+<span class="nc" id="L67">		return Arrays.stream(clazz.getDeclaredMethods()).filter(m -&gt; m</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">				.getDeclaredAnnotation(Setter.class) != null).toArray(Method[]::new);</span>
+	}
+
+	/**
+	 * Get the no args constructor for a given class.
+	 * 
+	 * @param clazz class for which the constructor is desired.
+	 * @return cno args constructor for class.
+	 */
+	private Constructor&lt;?&gt; getConstructor(final Class&lt;?&gt; clazz) {
+<span class="nc bnc" id="L79" title="All 2 branches missed.">		return Arrays.stream(clazz.getConstructors()).filter(c -&gt; c.getParameterTypes().length == 0).findFirst()</span>
+<span class="nc" id="L80">				.orElseThrow(RuntimeException::new);</span>
+	}
+
+	/**
+	 * Find and return the annotated Entity name for the given class.
+	 * 
+	 * @param clazz calss to find the Entity of.
+	 * @return string of the Entity name.
+	 */
+	private String getEntityName(final Class&lt;?&gt; clazz) {
+<span class="nc" id="L90">		return clazz.getDeclaredAnnotation(Entity.class).tableName();</span>
+	}
+
+	/**
+	 * Makes a Hashmap using the annotated setters of the class.
+	 * 
+	 * @param methods array of setters.
+	 * @return HashMap of setters, key is setter method, value is array of strings
+	 *         for column tame and parameter type.
+	 */
+	private HashMap&lt;Method, String[]&gt; makeSetterMap(final Method[] methods) {
+<span class="nc" id="L101">		final HashMap&lt;Method, String[]&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">		for (Method m : methods) {</span>
+<span class="nc" id="L103">			final String column = m.getDeclaredAnnotation(Setter.class).name();</span>
+<span class="nc" id="L104">			final String type = m.getParameterTypes()[0].getSimpleName();</span>
+<span class="nc" id="L105">			map.put(m, new String[] { column, type });</span>
+		}
+<span class="nc" id="L107">		return map;</span>
+	}
+
+	/**
+	 * Make hashMap of annotated getters for a class.
+	 * 
+	 * @param methods array of getters.
+	 * @return HashMap of getters. key is string name of column, value is the getter
+	 *         method.
+	 */
+	private HashMap&lt;String, Method&gt; makeGetterMap(final Method[] methods) {
+<span class="nc" id="L118">		final HashMap&lt;String, Method&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L119">		Arrays.stream(methods).forEach(m -&gt; map.put(m.getDeclaredAnnotation(Getter.class).name(), m));</span>
+<span class="nc" id="L120">		return map;</span>
+	}
+
+	private String getIdName(final Class&lt;?&gt; clazz) {
+<span class="nc" id="L124">		return Arrays.stream(clazz.getDeclaredFields())</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">				.filter(f -&gt; f.getDeclaredAnnotation(Id.class) != null)</span>
+<span class="nc" id="L126">				.map(f -&gt; f.getDeclaredAnnotation(Id.class).columnName()).findFirst().get();</span>
+	}
+
+	/**
+	 * maybe you could use this method instead of the Configuration.java class...just an idea..
+	 * 
+	 * Add a metamodel to the models HashMap.
+	 * 
+	 * @param clazz class to add to map.
+	 */
+	public void addModel(final Class&lt;?&gt; clazz) {
+<span class="nc" id="L137">		final String class_name = getClassName(clazz);</span>
+<span class="nc" id="L138">		final HashMap&lt;String, Method&gt; getters = makeGetterMap(getGetters(clazz));</span>
+<span class="nc" id="L139">		final HashMap&lt;Method, String[]&gt; setters = makeSetterMap(getSetters(clazz));</span>
+<span class="nc" id="L140">		final Constructor&lt;?&gt; constructor = getConstructor(clazz);</span>
+<span class="nc" id="L141">		final String Entity_name = getEntityName(clazz);</span>
+<span class="nc" id="L142">		final String pk = getIdName(clazz);</span>
+		//models.put(class_name, new MetaModel&lt;&gt;(clazz, getters, setters, constructor, Entity_name, pk));
+<span class="nc" id="L144">		}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

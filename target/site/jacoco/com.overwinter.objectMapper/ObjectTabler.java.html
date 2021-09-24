@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectTabler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.objectMapper</a> &gt; <span class="el_source">ObjectTabler.java</span></div><h1>ObjectTabler.java</h1><pre class="source lang-java linenums">package com.overwinter.objectMapper;
+
+import java.sql.Connection;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import com.overwinter.util.ColumnField;
+import com.overwinter.util.MetaModel;
+
+<span class="fc" id="L13">public class ObjectTabler extends ObjectMapper{</span>
+<span class="fc" id="L14">	static final ObjectTabler ob = new ObjectTabler();</span>
+<span class="fc" id="L15">	private static Logger log = Logger.getLogger(ObjectTabler.class);</span>
+	public &lt;T&gt; boolean addTabletoDb(Class&lt;T&gt; clazz, Connection conn) {
+<span class="nc" id="L17">		MetaModel&lt;?&gt; model = MetaModel.of(clazz);</span>
+<span class="nc" id="L18">		String primaryKey = model.getPrimaryKey().getColumnName();</span>
+		PreparedStatement pstmt;
+<span class="nc" id="L20">		String sql = &quot;DROP TABLE IF EXISTS &quot; + model.getSimpleName().toLowerCase() + &quot; Cascade;\n CREATE TABLE &quot; + model.getSimpleName().toLowerCase() + &quot;(&quot; + primaryKey + &quot; SERIAL PRIMARY KEY&quot;;</span>
+<span class="nc bnc" id="L21" title="All 2 branches missed.">		for (ColumnField c : model.getColumns()) {</span>
+<span class="nc bnc" id="L22" title="All 5 branches missed.">			switch(c.getType().getSimpleName()) {</span>
+<span class="nc" id="L23">			case &quot;String&quot; : sql += &quot;,&quot; + c.getColumnName() + &quot; VARCHAR(50) NOT NULL&quot;;</span>
+<span class="nc" id="L24">			break;</span>
+<span class="nc" id="L25">			case &quot;Integer&quot; : sql += &quot;,&quot; + c.getColumnName() + &quot; INT&quot;;</span>
+<span class="nc" id="L26">			break;</span>
+<span class="nc" id="L27">			case &quot;Boolean&quot; : sql += &quot;,&quot; + c.getColumnName() + &quot; BOOLEAN&quot;;</span>
+<span class="nc" id="L28">			break;</span>
+<span class="nc" id="L29">			case &quot;double&quot; : sql += &quot;,&quot; + c.getColumnName() + &quot; NUMERIC&quot;;</span>
+			break;
+			}
+<span class="nc" id="L32">		}</span>
+<span class="nc" id="L33">		sql += &quot;);&quot;;</span>
+		try {
+<span class="nc" id="L35">			pstmt = conn.prepareStatement(sql);</span>
+<span class="nc" id="L36">			ParameterMetaData pd = pstmt.getParameterMetaData();</span>
+<span class="nc" id="L37">			pstmt.execute();</span>
+<span class="nc" id="L38">			log.info(&quot;\nTable created using &quot;+pstmt);</span>
+<span class="nc" id="L39">			return true;</span>
+<span class="nc" id="L40">		} catch (SQLException e) {</span>
+<span class="nc" id="L41">			log.error(&quot;\nSQL error in ObjectTabler&quot;);</span>
+<span class="nc" id="L42">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L44">		return false;</span>
+	}
+	
+	static public ObjectTabler getInstance() {
+<span class="fc" id="L48">		return ob;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

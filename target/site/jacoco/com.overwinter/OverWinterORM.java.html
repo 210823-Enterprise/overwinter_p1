@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OverWinterORM.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter</a> &gt; <span class="el_source">OverWinterORM.java</span></div><h1>OverWinterORM.java</h1><pre class="source lang-java linenums">package com.overwinter;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.util.List;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import org.apache.log4j.Logger;
+
+import com.overwinter.config.OverwinterCfg;
+import com.overwinter.config.OverwinterDataSource;
+import com.overwinter.objectMapper.ObjectCache;
+import com.overwinter.objectMapper.ObjectGetter;
+import com.overwinter.objectMapper.ObjectInsert;
+import com.overwinter.objectMapper.ObjectMapper;
+import com.overwinter.objectMapper.ObjectRemover;
+import com.overwinter.objectMapper.ObjectTabler;
+import com.overwinter.objectMapper.ObjectUpdate;
+import com.overwinter.transaction.Transaction;
+
+import jdk.internal.org.jline.utils.Log;
+
+public class OverWinterORM {
+<span class="fc" id="L27">	static Logger log = Logger.getLogger(ObjectRemover.class);</span>
+<span class="fc" id="L28">	final private static OverWinterORM overWinterORM = new OverWinterORM();</span>
+<span class="fc" id="L29">	Connection conn = null;</span>
+<span class="fc" id="L30">	DataSource dataSource = null;</span>
+<span class="fc" id="L31">	private final ObjectRemover obj_remover = ObjectRemover.getInstance();</span>
+<span class="fc" id="L32">	private final ObjectGetter obj_getter = ObjectGetter.getInstance();</span>
+<span class="fc" id="L33">	private final ObjectTabler obj_table = ObjectTabler.getInstance();</span>
+<span class="fc" id="L34">	private final ObjectUpdate obj_updater = ObjectUpdate.getInstance();</span>
+<span class="fc" id="L35">	private final ObjectInsert obj_insert = ObjectInsert.getInstance();</span>
+<span class="fc" id="L36">	private final Transaction transaction = Transaction.getInstance();</span>
+<span class="fc" id="L37">	private final ObjectCache obj_cache = ObjectCache.getInstance();</span>
+	// obj getter, etc.....
+<span class="fc" id="L39">	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure(&quot;./src/test/resources/test_application.properties&quot;));</span>
+	
+<span class="fc" id="L41">	private OverWinterORM() {</span>
+		try {
+<span class="fc" id="L43">			dataSource = pool.setUpPool();</span>
+<span class="fc" id="L44">			conn = dataSource.getConnection();</span>
+<span class="fc" id="L45">			log.info(&quot;\nNew OverWinterORM launched:&quot;+this);</span>
+<span class="nc" id="L46">		} catch (SQLException e) {</span>
+<span class="nc" id="L47">			log.info(&quot;\nSQLException thrown in OverwinterDataSource&quot;);</span>
+<span class="nc" id="L48">		} catch (Exception e) {</span>
+<span class="nc" id="L49">			log.info(&quot;\nGeneral Exception thrown in OverwinterDataSource&quot;);</span>
+<span class="pc" id="L50">		}</span>
+<span class="fc" id="L51">	}</span>
+
+	// return a a static instance of this singleton class
+	public static OverWinterORM getInstance() {
+<span class="fc" id="L55">		return overWinterORM;</span>
+	}
+
+	// when someone wants to delete an object from their database
+	// DIYORM.deleteObjFromDB
+	public boolean deleteObjFromDB(Object obj) {
+
+<span class="nc" id="L62">		return obj_remover.removeObjectFromDb(obj, conn);</span>
+
+	}
+
+	public Optional&lt;List&lt;Object&gt;&gt; getListObjectFromDB(Object obj) throws InstantiationException, IllegalAccessException {
+<span class="nc" id="L67">		return obj_getter.getListObjectFromDB(obj.getClass(), conn);</span>
+
+	}
+	public Optional&lt;List&lt;Object&gt;&gt; getListObjectFromDB(final Class &lt;?&gt; clazz, final String columns, final String conditions){
+<span class="nc" id="L71">		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, null);</span>
+	}
+
+	public Optional&lt;List&lt;Object&gt;&gt; getListObjectFromDB(final Class &lt;?&gt; clazz, final String columns, final String conditions,final String operators){
+<span class="nc" id="L75">		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, operators);</span>
+	}
+
+	public Object addTabletoDb(Class&lt;?&gt; clazz) {
+<span class="nc" id="L79">		return obj_table.addTabletoDb(clazz, conn);</span>
+
+	}
+
+	public Object updateObjFromDB(Object obj) {
+
+<span class="nc" id="L85">		return obj_updater.updateObjectFromDB(obj, conn);</span>
+
+	}
+
+	public void insertObjIntoDB(Object obj) {
+<span class="nc" id="L90">		obj_insert.insertObjectIntoDB(obj, conn);</span>
+<span class="nc" id="L91">	}</span>
+	
+	public Transaction beginTransaction() {
+<span class="nc" id="L94">		return transaction.beginTransaction(conn);</span>
+	}
+	
+	public Transaction commit() {
+<span class="nc" id="L98">		return transaction.commit(conn);</span>
+	}
+
+	public Transaction rollBack() {
+<span class="nc" id="L102">		return transaction.rollBack(conn);</span>
+	}
+	
+	public Transaction rollBackWithSpecificSavePoint(Savepoint savepoint) {
+<span class="nc" id="L106">		return transaction.rollBackWithSpecificSavePoint(conn, savepoint);</span>
+	}
+	
+	public Transaction setSavePoint() {
+		
+<span class="nc" id="L111">		return transaction.setSavePoint(conn);</span>
+	}
+	
+	public Transaction setSavePointWithName(String name) {
+<span class="nc" id="L115">		return transaction.setSavePointWithName(conn, name);</span>
+	}
+	
+	public boolean addAllFromDBToCache(final Class&lt;?&gt; clazz) {
+		// this method will call the first time user login
+<span class="nc" id="L120">		Optional&lt;List&lt;Object&gt;&gt; list = obj_getter.getListObjectFromDB(clazz, conn);</span>
+<span class="nc" id="L121">		return obj_cache.addAllFromDBToCache(clazz, list);</span>
+	}
+	
+	public ObjectCache putObjectInCache(Object obj) {
+<span class="nc" id="L125">		return obj_cache.putObjectInCache(obj);</span>
+	}
+
+	public Transaction getTransaction() {
+<span class="nc" id="L129">		return transaction;</span>
+	}
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
