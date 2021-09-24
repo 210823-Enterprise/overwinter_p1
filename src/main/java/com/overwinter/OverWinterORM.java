@@ -2,6 +2,7 @@ package com.overwinter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,12 +90,29 @@ public class OverWinterORM {
 		obj_insert.insertObjectIntoDB(obj, conn);
 	}
 	
-	public Transaction transaction() {
+	public Transaction beginTransaction() {
 		return transaction.beginTransaction(conn);
 	}
 	
 	public Transaction commit() {
 		return transaction.commit(conn);
+	}
+
+	public Transaction rollBack() {
+		return transaction.rollBack(conn);
+	}
+	
+	public Transaction rollBackWithSpecificSavePoint(Savepoint savepoint) {
+		return transaction.rollBackWithSpecificSavePoint(conn, savepoint);
+	}
+	
+	public Transaction setSavePoint() {
+		
+		return transaction.setSavePoint(conn);
+	}
+	
+	public Transaction setSavePointWithName(String name) {
+		return transaction.setSavePointWithName(conn, name);
 	}
 	
 	public boolean addAllFromDBToCache(final Class<?> clazz) {
@@ -106,6 +124,11 @@ public class OverWinterORM {
 	public ObjectCache putObjectInCache(Object obj) {
 		return obj_cache.putObjectInCache(obj);
 	}
+
+	public Transaction getTransaction() {
+		return transaction;
+	}
+	
 	
 	
 }
