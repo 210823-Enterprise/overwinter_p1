@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 public class OverwinterCfg {
-	static Logger log = Logger.getLogger(OverwinterCfg.class);
+	private static Logger log = Logger.getLogger(OverwinterCfg.class);
 	private static String driver;
 	private static String url;
 	private static String username;
@@ -42,7 +42,7 @@ public class OverwinterCfg {
 		this.password = password;
 		this.poolSize = poolSize;
 		this.driver = driver;
-		log.info("new OverwinterCfg created: "+this);
+		log.info("\nnew OverwinterCfg created: "+this);
 	}
 	/**
 	 * This will allow us to extract properties values from file path
@@ -74,7 +74,7 @@ public class OverwinterCfg {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		log.warn("OverwinterCfg.configure() returned null");
+		log.warn("\nOverwinterCfg.configure() returned null");
 		return null;
 	}
 

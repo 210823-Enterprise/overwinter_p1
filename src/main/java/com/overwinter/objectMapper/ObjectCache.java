@@ -18,7 +18,7 @@ import com.overwinter.util.Configuration;
 import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
-	static Logger log = Logger.getLogger(ObjectCache.class);
+	private static Logger log = Logger.getLogger(ObjectCache.class);
 	public final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
 	public OverWinterORM orm = OverWinterORM.getInstance();
@@ -64,7 +64,7 @@ public class ObjectCache {
 
 		this.cache.put(o.getClass(), hSet);
 		
-		cache.forEach((k, v) -> log.info("UPDATE PER CRUD Key " + k + " Value " + v));
+		cache.forEach((k, v) -> log.info("\nUPDATE PER CRUD Key " + k + " Value " + v));
 		return getInstance();
 	}
 
@@ -77,7 +77,7 @@ public class ObjectCache {
 			hSet.add(theObj);
 		}
 		this.cache.put(clazz, hSet);
-		cache.forEach((k, v) -> log.info("FIRST TIME CACHE Key " + k + " Value " + v));
+		cache.forEach((k, v) -> log.info("\nFIRST TIME CACHE Key " + k + " Value " + v));
 		return true;
 	}
 
