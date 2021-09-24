@@ -70,16 +70,16 @@ public class OverWinterORMTest {
 		assertEquals(true, t);
 	}
 	
-	@Test
-	public void testGetListObjectFromDB() {
-		Tester test = new Tester(1, "Kirk", "Hahn");
-		Tester test2 = new Tester(2, "Joel", "Wiegand");
-		List<Object> testList = new ArrayList<Object>();
-		testList.add(test);
-		testList.add(test2);
-		Optional<List<Object>> ob = Optional.of(testList);
-		when(mockobject_getter.getListObjectFromDB(test.getClass(), mockconn)).thenReturn(ob);
-		System.out.println(ob);
-		assertEquals(ob, orm.getListObjectFromDB(test));
-	}
+//	@Test
+//	public void testGetListObjectFromDB() {
+//		Tester test = new Tester(1, "Kirk", "Hahn");
+//		Tester test2 = new Tester(2, "Joel", "Wiegand");
+//		List<Object> testList = new ArrayList<Object>();
+//		testList.add(test);
+//		testList.add(test2);
+//		Optional<List<Object>> ob = Optional.of(testList);
+//		when(mockobject_getter.getListObjectFromDB(test.getClass(), mockconn)).thenReturn(ob);
+//		System.out.println(ob);
+//		assertEquals(ob, orm.getListObjectFromDB(test));
+//	}
 }

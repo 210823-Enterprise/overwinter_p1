@@ -65,7 +65,6 @@ public class ObjectInsert extends ObjectMapper {
 		try {
 			statement = conn.prepareStatement(sql);
 			ParameterMetaData pd = statement.getParameterMetaData();
-			
 			int counter = 1;
 			for(ColumnField field : model.getColumns()) {
 				// If the columnName isn't empty 
@@ -96,6 +95,7 @@ public class ObjectInsert extends ObjectMapper {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			log.info("\nSQLException error in ObjectInsert");
+			e.printStackTrace();
 		}
 		return false;
 	}
