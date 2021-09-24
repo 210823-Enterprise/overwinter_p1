@@ -22,9 +22,11 @@ public class ObjectTabler extends ObjectMapper{
 			switch(c.getType().getSimpleName()) {
 			case "String" : sql += "," + c.getColumnName() + " VARCHAR(50) NOT NULL";
 			break;
-			case "Integer" : sql += "," + c.getColumnName() + " NUMERIC(50)";
+			case "Integer" : sql += "," + c.getColumnName() + " INT";
 			break;
-			case "Boolean" : sql += "," + c.getColumnName() + "BOOLEAN";
+			case "Boolean" : sql += "," + c.getColumnName() + " BOOLEAN";
+			break;
+			case "double" : sql += "," + c.getColumnName() + " NUMERIC";
 			break;
 			}
 		}
@@ -37,6 +39,7 @@ public class ObjectTabler extends ObjectMapper{
 			return true;
 		} catch (SQLException e) {
 			log.error("\nSQL error in ObjectTabler");
+			e.printStackTrace();
 		}
 		return false;
 	}

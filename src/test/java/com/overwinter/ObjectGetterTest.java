@@ -35,7 +35,7 @@ public class ObjectGetterTest {
 		mockorm = mock(OverWinterORM.class);
 		object_getter = ObjectGetter.getInstance();
 		mockconn = mock(Connection.class);
-		 = mock(ResultSet.class);
+		mockrs= mock(ResultSet.class);
 	}
 	
 	@After 
@@ -44,7 +44,6 @@ public class ObjectGetterTest {
 		object_getter = null;
 		mockconn = null;
 	}
-	
 	@Test
 	public void testcreateSimpleObject() {
 		Tester test = new Tester(0, "Kirk", "Hahn");
