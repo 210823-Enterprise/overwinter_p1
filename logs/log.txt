@@ -109,3 +109,37 @@ new OverwitnerDataSource created: com.overwinter.config.OverwinterDataSource@289
 2021-09-24 14:15:23 INFO  overwinter.config.OverwinterDataSource:53 - org.apache.commons.pool.impl.GenericObjectPool@2805c96b used to create a pool
 2021-09-24 14:15:37 INFO  overwinter.objectMapper.ObjectRemover:45 - 
 New OverWinterORM launched:com.overwinter.OverWinterORM@2438dcd
+2021-09-24 14:24:26 INFO  overwinter.objectMapper.ObjectGetter:108 - 
+Columns:[Ljava.lang.String;@3b6ddd1d conditions: [Ljava.lang.String;@3f6b0be5 operators: null
+2021-09-24 14:24:26 INFO  overwinter.config.OverwinterCfg:45 - 
+new OverwinterCfg created: com.overwinter.config.OverwinterCfg@76b1e9b8
+2021-09-24 14:24:26 INFO  overwinter.config.OverwinterDataSource:34 - 
+new OverwitnerDataSource created: com.overwinter.config.OverwinterDataSource@27406a17
+2021-09-24 14:24:26 INFO  overwinter.config.OverwinterDataSource:53 - org.apache.commons.pool.impl.GenericObjectPool@748741cb used to create a pool
+2021-09-24 14:24:47 INFO  overwinter.objectMapper.ObjectRemover:45 - 
+New OverWinterORM launched:com.overwinter.OverWinterORM@682bd3c4
+2021-09-24 14:25:55 INFO  overwinter.config.OverwinterCfg:45 - 
+new OverwinterCfg created: com.overwinter.config.OverwinterCfg@1d8d30f7
+2021-09-24 14:25:55 INFO  overwinter.config.OverwinterDataSource:34 - 
+new OverwitnerDataSource created: com.overwinter.config.OverwinterDataSource@23d2a7e8
+2021-09-24 14:25:55 INFO  overwinter.config.OverwinterDataSource:53 - org.apache.commons.pool.impl.GenericObjectPool@548ad73b used to create a pool
+2021-09-24 14:26:01 INFO  overwinter.objectMapper.ObjectRemover:42 - 
+New OverWinterORM launched:com.overwinter.OverWinterORM@5f049ea1
+2021-09-24 14:26:03 INFO  overwinter.objectMapper.ObjectTabler:38 - 
+Table created using DROP TABLE IF EXISTS tester Cascade;
+ CREATE TABLE tester(test_id SERIAL PRIMARY KEY,test_username VARCHAR(50) NOT NULL,test_password VARCHAR(50) NOT NULL)
+2021-09-24 14:26:04 INFO  overwinter.objectMapper.ObjectInsert:77 - INSERT INTO "test"(test_username, test_password)
+VALUES(?, ?)
+RETURNING test_id; is updating the database
+2021-09-24 14:26:06 INFO  overwinter.objectMapper.ObjectInsert:77 - INSERT INTO "test"(test_username, test_password)
+VALUES(?, ?)
+RETURNING test_id; is updating the database
+2021-09-24 14:26:08 INFO  overwinter.objectMapper.ObjectInsert:77 - INSERT INTO "test"(test_username, test_password)
+VALUES(?, ?)
+RETURNING test_id; is updating the database
+2021-09-24 14:26:10 INFO  overwinter.objectMapper.ObjectGetter:67 - SELECT * FROM tester; has been executed against database
+2021-09-24 14:26:10 INFO  overwinter.objectMapper.ObjectCache:75 - 
+FIRST TIME CACHE Key class com.overwinter.dummyModels.Tester Value []
+2021-09-24 14:26:12 ERROR overwinter.objectMapper.ObjectUpdate:60 - UPDATE "test" SET test_username = ? ,test_password = ?  WHERE test_id= ?updated the database
+2021-09-24 14:26:12 INFO  overwinter.objectMapper.ObjectCache:62 - 
+UPDATE PER CRUD Key class com.overwinter.dummyModels.Tester Value []

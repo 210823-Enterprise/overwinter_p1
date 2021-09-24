@@ -43,7 +43,7 @@ public class ObjectTabler extends ObjectMapper{
 		}
 		return false;
 	}
-	
+
 	static public ObjectTabler getInstance() {
 		return ob;
 	}

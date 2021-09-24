@@ -19,7 +19,7 @@ public class OverwinterDataSource {
 	private static String password = "";
 	private static int poolsize = 5;
 	private static GenericObjectPool gPool = null;
-	
+
 	public OverwinterDataSource() {
 		super();
 	}
@@ -59,7 +59,7 @@ public class OverwinterDataSource {
 	}
 
 	// for our own benefit lets create a method to print the connection pool status
-	// for now 
+	// for now
 	public void printDbStatus() {
 		System.out.println("Max: " + getConnectionPool().getMaxActive() + "; Active: "
 				+ getConnectionPool().getNumActive() + "; Idle: " + getConnectionPool().getNumIdle());

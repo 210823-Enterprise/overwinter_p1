@@ -1,17 +1,12 @@
 package com.overwinter.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.management.modelmbean.ModelMBean;
 
 import com.overwinter.annotations.Column;
 import com.overwinter.annotations.Entity;
@@ -41,8 +36,8 @@ public class MetaModel<T> {
 	public MetaModel(Class<T> clazz) {
 		this.clazz = clazz;
 		this.columnFields = new LinkedList<>();
-		this.getters = new ArrayList<Method>();
-		this.setters = new ArrayList<Method>();
+		this.getters = new ArrayList<>();
+		this.setters = new ArrayList<>();
 		setColumns();
 		setMethods();
 	}
@@ -70,7 +65,7 @@ public class MetaModel<T> {
 
 	// TO_DO: public IdField getPrimaryKey() .. need new class IdField
 	public IdField getPrimaryKey() {
-		
+
 		Field[] fields = clazz.getDeclaredFields();// get all fields
 		for (Field field : fields) {
 			Id id = field.getAnnotation(Id.class);
@@ -83,10 +78,10 @@ public class MetaModel<T> {
 	}
 
 	public List<ColumnField> getColumns() {
-		
+
 		return columnFields;
 	}
-	
+
 	public List<ColumnField> setColumns() {
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
@@ -96,7 +91,7 @@ public class MetaModel<T> {
 			}
 		}
 		return columnFields;
-	} 
+	}
 
 	public Method[] setMethods() {
 		Method[] mArray = clazz.getMethods();

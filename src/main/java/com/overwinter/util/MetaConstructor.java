@@ -29,7 +29,7 @@ public class MetaConstructor {
 
 	/**
 	 * returns HashMap containing all the metamodels so far constructed.
-	 * 
+	 *
 	 * @return HashMap of metamodels created. key is string of class name, value is
 	 *         metamodel object.
 	 */
@@ -48,7 +48,7 @@ public class MetaConstructor {
 
 	/**
 	 * Returns all annotated getters of given class
-	 * 
+	 *
 	 * @param clazz class to get getters from.
 	 * @return Array of getter methods.
 	 */
@@ -59,7 +59,7 @@ public class MetaConstructor {
 
 	/**
 	 * Returns all annotated setters of given class
-	 * 
+	 *
 	 * @param clazz class to get setters from.
 	 * @return Array of setter methods.
 	 */
@@ -71,7 +71,7 @@ public class MetaConstructor {
 
 	/**
 	 * Get the no args constructor for a given class.
-	 * 
+	 *
 	 * @param clazz class for which the constructor is desired.
 	 * @return cno args constructor for class.
 	 */
@@ -82,7 +82,7 @@ public class MetaConstructor {
 
 	/**
 	 * Find and return the annotated Entity name for the given class.
-	 * 
+	 *
 	 * @param clazz calss to find the Entity of.
 	 * @return string of the Entity name.
 	 */
@@ -92,7 +92,7 @@ public class MetaConstructor {
 
 	/**
 	 * Makes a Hashmap using the annotated setters of the class.
-	 * 
+	 *
 	 * @param methods array of setters.
 	 * @return HashMap of setters, key is setter method, value is array of strings
 	 *         for column tame and parameter type.
@@ -109,7 +109,7 @@ public class MetaConstructor {
 
 	/**
 	 * Make hashMap of annotated getters for a class.
-	 * 
+	 *
 	 * @param methods array of getters.
 	 * @return HashMap of getters. key is string name of column, value is the getter
 	 *         method.
@@ -128,9 +128,9 @@ public class MetaConstructor {
 
 	/**
 	 * maybe you could use this method instead of the Configuration.java class...just an idea..
-	 * 
+	 *
 	 * Add a metamodel to the models HashMap.
-	 * 
+	 *
 	 * @param clazz class to add to map.
 	 */
 	public void addModel(final Class<?> clazz) {

@@ -7,9 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public abstract class ObjectMapper {
-	
+
 	protected PreparedStatement setStatement(PreparedStatement pstmt, ParameterMetaData pd, Method getter, Object obj, int index) {
-		
+
 		try {
 			return setPreparedStatmentByType(pstmt, pd.getParameterTypeName(index), String.valueOf(getter.invoke(obj)), index);
 		} catch (IllegalAccessException e) {
