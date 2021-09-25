@@ -33,6 +33,7 @@ public class OverWinterORMTest {
 	@Before
 	public void setUp() {
 		orm = OverWinterORM.getInstance();
+		mockobject_remover = ObjectRemover.getInstance();
 		mockobject_remover = mock(ObjectRemover.class);
 		mockobject_getter = mock(ObjectGetter.class);
 		mockobject_tabler = mock(ObjectTabler.class);

@@ -74,7 +74,7 @@ public class OverWinterORM {
 		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, operators);
 	}
 
-	public Object addTabletoDb(Class<?> clazz) {
+	public boolean addTabletoDb(Class<?> clazz) {
 		return obj_table.addTabletoDb(clazz, conn);
 
 	}
