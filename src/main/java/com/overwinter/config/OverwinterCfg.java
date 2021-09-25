@@ -42,7 +42,7 @@ public class OverwinterCfg {
 		OverwinterCfg.password = password;
 		OverwinterCfg.poolSize = poolSize;
 		OverwinterCfg.driver = driver;
-		log.info("\nnew OverwinterCfg created: "+this);
+		log.info("new OverwinterCfg created: "+this);
 	}
 	/**
 	 * This will allow us to extract properties values from file path
@@ -74,7 +74,7 @@ public class OverwinterCfg {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		log.warn("\nOverwinterCfg.configure() returned null");
+		log.warn("OverwinterCfg.configure() returned null");
 		return null;
 	}
 

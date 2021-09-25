@@ -31,7 +31,7 @@ public class OverwinterDataSource {
 		username = config.getUsername();
 		password = config.getPassword();
 		poolsize = config.getPoolSize();
-		log.info("\nnew OverwitnerDataSource created: "+this);
+		log.info("new OverwitnerDataSource created: "+this);
 	}
  	// Apache Common dbcp gives us the functionality to create a connection pool. But we have to do so
 	// by using its specific class and functionality called GenericObjectPool

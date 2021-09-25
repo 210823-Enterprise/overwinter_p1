@@ -29,7 +29,7 @@ public class ObjectGetter extends ObjectMapper {
 			List<ColumnField> columnFields = model.getColumns();
 			Constructor<?> constuct = model.getConstructor();
 			Object c = constuct.newInstance();
-			log.info("\nnew Instance created");
+			log.info("new Instance created");
 			Method m = model.getSetterMethod(primaryKey);
 			m.invoke(c, rs.getInt(primaryKey));
 			for (ColumnField cf : columnFields) {
@@ -42,15 +42,15 @@ public class ObjectGetter extends ObjectMapper {
 			log.info(c + " added to list of objects in getListObjectFromDB() ");
 			return listObjects;
 		} catch (InstantiationException e1) {
-			log.error("\nInstantiation Exception in getListObjectFromDB()");
+			log.error("Instantiation Exception in getListObjectFromDB()");
 		} catch (IllegalAccessException e1) {
-			log.error("\nIllegal Access Exception in getListObjectFromDB()");
+			log.error("Illegal Access Exception in getListObjectFromDB()");
 		} catch (InvocationTargetException e1) {
-			log.error("\nInvocation Target Exception in getListObjectFromDB()");
+			log.error("Invocation Target Exception in getListObjectFromDB()");
 		} catch (IllegalArgumentException e) {
-			log.error("\nInvocation Target Exception in getListObjectFromDB()");
+			log.error("Invocation Target Exception in getListObjectFromDB()");
 		} catch (SQLException e) {
-			log.error("\nInvocation Target Exception in getListObjectFromDB()");
+			log.error("Invocation Target Exception in getListObjectFromDB()");
 		}
 		return listObjects;
 	}
@@ -70,9 +70,9 @@ public class ObjectGetter extends ObjectMapper {
 
 			}
 		} catch (SQLException e) {
-			log.error("\nSQLException in getListObjectFromDB()");
+			log.error("SQLException in getListObjectFromDB()");
 		} catch (IllegalArgumentException e) {
-			log.error("\nbad argument in getListObjectFromDB()");
+			log.error("bad argument in getListObjectFromDB()");
 		}
 		return Optional.of(listObjects);
 
@@ -105,7 +105,7 @@ public class ObjectGetter extends ObjectMapper {
 	public String createSQL(String[] columnArray, String[] conditionsArray, String[] operatorsArray, Class<?> clazz,
 			String primaryKey) {
 		String sql = "SELECT ";
-		log.info("\nColumns:" + columnArray + " conditions: " + conditionsArray + " operators: " + operatorsArray);
+		log.info("Columns:" + columnArray + " conditions: " + conditionsArray + " operators: " + operatorsArray);
 
 		for (int i = 0; i < columnArray.length; i++) {
 			// If the columnName isn't empty
@@ -181,16 +181,16 @@ public class ObjectGetter extends ObjectMapper {
 			for (int i3 = 0; i3 < conditionsArray.length; i3++) {
 				pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(i3 + 1), conditionsArray[i3], i3 + 1);
 			}
-			log.info("\nPrepared Statment " + pstmt + " is about to query the database");
+			log.info("Prepared Statment " + pstmt + " is about to query the database");
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				listObjects = constructComplexObject(model, primaryKey, rs, columnArray, listObjects);
 			}
 		} catch (SQLException e2) {
-			log.error("\nSQLException exception from complex getObjectFromDB");
+			log.error("SQLException exception from complex getObjectFromDB");
 		} catch (IllegalArgumentException e) {
-			log.error("\nIllegalArgumentException exception from complex getObjectFromDB");
+			log.error("IllegalArgumentException exception from complex getObjectFromDB");
 		}
 		log.info(listObjects + " is being returned from complex getListObjectFromDB");
 		return Optional.of(listObjects);
@@ -204,33 +204,33 @@ public class ObjectGetter extends ObjectMapper {
 		try {
 			switch (type) {
 			case "String":
-				log.info("\nString found in ResultSet");
+				log.info("String found in ResultSet");
 				return rs.getString(columnName);
 			case "Integer":
-				log.info("\nInteger found in ResultSet");
+				log.info("Integer found in ResultSet");
 				return rs.getInt(columnName);
 			case "Double":
-				log.info("\nDouble found in ResultSet");
+				log.info("Double found in ResultSet");
 				return rs.getDouble(columnName);
 			case "int":
-				log.info("\nint found in ResultSet");
+				log.info("int found in ResultSet");
 				return rs.getInt(columnName);
 			case "double":
-				log.info("\ndouble found in ResultSet");
+				log.info("double found in ResultSet");
 				return rs.getDouble(columnName);
 			case "float":
-				log.info("\nfloat found in ResultSet");
+				log.info("float found in ResultSet");
 				return rs.getFloat(columnName);
 			case "Float":
-				log.info("\nFloat found in ResultSet");
+				log.info("Float found in ResultSet");
 				return rs.getFloat(columnName);
 			}
-			log.error("\nunknown type found in ResultSet in getByType");
+			log.error("unknown type found in ResultSet in getByType");
 			return null;
 		} catch (
 
 		SQLException e) {
-			log.error("\nSQLException exception from getByType");
+			log.error("SQLException exception from getByType");
 			return null;
 		}
 	}
