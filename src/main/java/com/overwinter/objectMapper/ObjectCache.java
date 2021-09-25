@@ -35,8 +35,6 @@ public class ObjectCache {
 		try {
 			pk = (int) m.invoke(o);
 			// loop through hashset of the attach class
-			boolean copy=false;
-			Object o2=null;
 			for (Object theObj : hSet) {
 				MetaModel<?> model2 = MetaModel.of(theObj.getClass());
 				String primaryKey2 = model2.getPrimaryKey().getColumnName();
@@ -45,7 +43,7 @@ public class ObjectCache {
 				// we looking for the id of one of the object in the hashset
 				if (pk == pk2) {
 					// perform update
-					hSet.remove(o2); // id matched
+					hSet.remove(theObj); // id matched
 				}
 			}
 			hSet.add(o); // new object
