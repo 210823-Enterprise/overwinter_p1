@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectInsert.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.objectMapper</a> &gt; <span class="el_source">ObjectInsert.java</span></div><h1>ObjectInsert.java</h1><pre class="source lang-java linenums">package com.overwinter.objectMapper;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import com.overwinter.util.ColumnField;
+import com.overwinter.util.MetaModel;
+
+<span class="fc" id="L16">public class ObjectInsert extends ObjectMapper {</span>
+<span class="fc" id="L17">	static ObjectInsert objInsert = new ObjectInsert();</span>
+<span class="fc" id="L18">	private static Logger log = Logger.getLogger(ObjectInsert.class);</span>
+	public boolean insertObjectIntoDB(Object obj, Connection conn) {
+<span class="nc" id="L20">		MetaModel&lt;?&gt; model = MetaModel.of(obj.getClass());</span>
+<span class="nc" id="L21">		String primaryKey= model.getPrimaryKey().getColumnName();</span>
+<span class="nc" id="L22">		int numberOfColumn = 0;</span>
+		// Loop through to see how many columns do we need to update
+<span class="nc bnc" id="L24" title="All 2 branches missed.">		for(ColumnField field : model.getColumns()) {</span>
+			// If the columnName isn't empty 
+<span class="nc bnc" id="L26" title="All 2 branches missed.">			if(field.getColumnName() != &quot;&quot;) {</span>
+<span class="nc" id="L27">				numberOfColumn++;</span>
+			}
+<span class="nc" id="L29">		}</span>
+		// Start the sql string
+		// Make sure everything is lowercase
+		// as long as we are consistance
+<span class="nc" id="L33">		String sql = &quot;INSERT INTO &quot; + model.getEntity().getTableName().toLowerCase() + &quot;(&quot;;</span>
+		// loop through everything
+<span class="nc" id="L35">		int columnCounter = 0;</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">		for(ColumnField field : model.getColumns()) {</span>
+			// If the columnName isn't empty 
+<span class="nc bnc" id="L38" title="All 2 branches missed.">			if(field.getColumnName() != &quot;&quot;) {</span>
+<span class="nc" id="L39">				columnCounter++;</span>
+				// set the column = value
+				// SET username = 'thinh'
+<span class="nc" id="L42">				sql += field.getColumnName(); // WHERE ARE THE VALUE? GRAB IT FROM THE META MODEL .getMethod(&quot;&quot;)</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">				if(numberOfColumn &gt; columnCounter) {</span>
+<span class="nc" id="L44">					sql += &quot;, &quot;; // if more than one column the add ,</span>
+				} else {
+<span class="nc" id="L46">					sql += &quot;)&quot;;</span>
+<span class="nc" id="L47">					break;</span>
+				}
+			}
+<span class="nc" id="L50">		}</span>
+<span class="nc" id="L51">		int testing = columnCounter;</span>
+		// WHERE username = ?
+<span class="nc" id="L53">		columnCounter = 0; // this will = 1 instead of 2</span>
+<span class="nc" id="L54">		sql += &quot;\nVALUES(&quot;;</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		for(ColumnField field : model.getColumns()) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">			if(numberOfColumn-- &gt; columnCounter) {</span>
+<span class="nc" id="L57">				columnCounter++;</span>
+<span class="nc" id="L58">				sql += &quot;?, &quot;;</span>
+			} else {
+<span class="nc" id="L60">				sql += &quot;?)\nRETURNING &quot; + primaryKey + &quot;;&quot;;</span>
+<span class="nc" id="L61">				break;</span>
+			}
+<span class="nc" id="L63">		}</span>
+		PreparedStatement statement;
+		try {
+<span class="nc" id="L66">			statement = conn.prepareStatement(sql);</span>
+<span class="nc" id="L67">			ParameterMetaData pd = statement.getParameterMetaData();</span>
+<span class="nc" id="L68">			int counter = 1;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">			for(ColumnField field : model.getColumns()) {</span>
+				// If the columnName isn't empty 
+//				for(int i = 1; i &lt; testing + 1; i++) {
+					
+<span class="nc" id="L73">					statement =	setStatement(statement, pd, (model.getGetterMethod(field.getColumnName())), obj, counter);</span>
+<span class="nc" id="L74">					counter++;</span>
+//				}
+<span class="nc" id="L76">			}</span>
+<span class="nc" id="L77">			log.info(sql+&quot; is updating the database&quot;);</span>
+<span class="nc" id="L78">			ResultSet rs = statement.executeQuery();</span>
+<span class="nc" id="L79">			rs.next();</span>
+<span class="nc" id="L80">			int pk = rs.getInt(primaryKey);</span>
+<span class="nc" id="L81">			Method m = model.getSetterMethod(model.getPrimaryKey().getColumnName());</span>
+			try {
+<span class="nc" id="L83">				m.invoke(obj, pk);</span>
+<span class="nc" id="L84">			} catch (IllegalAccessException e) {</span>
+<span class="nc" id="L85">				log.info(&quot;\nIllegalAccessException error in ObjectInsert&quot;);</span>
+<span class="nc" id="L86">			} catch (IllegalArgumentException e) {</span>
+				// TODO Auto-generated catch block
+<span class="nc" id="L88">				log.info(&quot;\nIllegalArgumentException error in ObjectInsert&quot;);</span>
+<span class="nc" id="L89">			} catch (InvocationTargetException e) {</span>
+				// TODO Auto-generated catch block
+<span class="nc" id="L91">				log.info(&quot;\nInvocationTargetException error in ObjectInsert&quot;);</span>
+<span class="nc" id="L92">			}</span>
+<span class="nc" id="L93">			return true;</span>
+			
+<span class="nc" id="L95">		} catch (SQLException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L97">			log.info(&quot;\nSQLException error in ObjectInsert&quot;);</span>
+<span class="nc" id="L98">			e.printStackTrace();</span>
+		}
+<span class="nc" id="L100">		return false;</span>
+	}
+	// Get instance of objUpdate
+	public static ObjectInsert getInstance() {
+<span class="fc" id="L104">		return objInsert;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

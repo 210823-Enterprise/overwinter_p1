@@ -2,8 +2,6 @@ package com.overwinter.objectMapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,16 +10,13 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 import com.overwinter.OverWinterORM;
-import com.overwinter.config.OverwinterDataSource;
-import com.overwinter.dummyModels.Tester;
-import com.overwinter.util.Configuration;
 import com.overwinter.util.MetaModel;
 
 public class ObjectCache {
-	static Logger log = Logger.getLogger(ObjectCache.class);
+	private static Logger log = Logger.getLogger(ObjectCache.class);
 	private final HashMap<Class<?>, HashSet<Object>> cache;
 	static final ObjectCache obj_cache = new ObjectCache();
-	OverWinterORM orm = OverWinterORM.getInstance();
+	private OverWinterORM orm = OverWinterORM.getInstance();
 
 	private ObjectCache() {
 		super();
@@ -29,7 +24,8 @@ public class ObjectCache {
 	}
 
 	// we call this method after the first time
-	public ObjectCache putObjectInCache(Object o) {
+	public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object o) {
+		log.info("Starting putObjectInCache");
 		// set to that cache object
 		HashSet<Object> hSet = cache.get(o.getClass());
 		int pk = 0;
@@ -48,9 +44,9 @@ public class ObjectCache {
 				if (pk == pk2) {
 					// perform update
 					hSet.remove(theObj); // id matched
-					hSet.add(o); // new object
 				}
 			}
+			hSet.add(o); // new object
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,13 +59,14 @@ public class ObjectCache {
 		}
 
 		this.cache.put(o.getClass(), hSet);
-		
+
 		cache.forEach((k, v) -> log.info("UPDATE PER CRUD Key " + k + " Value " + v));
-		return getInstance();
+		log.info("Ending putObjectInCache");
+		return cache;
 	}
 
-	public boolean addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
-
+	public HashMap<Class<?>, HashSet<Object>> addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
+		log.info("Starting addAllFromDBToCache");
 		// new hashset every time user log in
 		HashSet<Object> hSet = new HashSet<>();
 		// loop through
@@ -78,7 +75,13 @@ public class ObjectCache {
 		}
 		this.cache.put(clazz, hSet);
 		cache.forEach((k, v) -> log.info("FIRST TIME CACHE Key " + k + " Value " + v));
-		return true;
+		log.info("Ending addAllFromDBToCache");
+		return cache;
+	}
+	
+
+	public HashMap<Class<?>, HashSet<Object>> getCache() {
+		return cache;
 	}
 
 	public static ObjectCache getInstance() {

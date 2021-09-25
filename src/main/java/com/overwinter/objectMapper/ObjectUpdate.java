@@ -12,7 +12,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectUpdate extends ObjectMapper {
 	static ObjectUpdate objUpdate = new ObjectUpdate();
-	static Logger log = Logger.getLogger(ObjectUpdate.class);
+	private static Logger log = Logger.getLogger(ObjectUpdate.class);
 
 	public boolean updateObjectFromDB(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());

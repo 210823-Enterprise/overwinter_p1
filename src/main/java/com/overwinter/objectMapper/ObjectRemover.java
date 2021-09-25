@@ -11,7 +11,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectRemover extends ObjectMapper {
 	static final ObjectRemover ob = new ObjectRemover();
-	static Logger log = Logger.getLogger(ObjectRemover.class);
+	private static Logger log = Logger.getLogger(ObjectRemover.class);
 	public boolean removeObjectFromDb(Object obj, Connection conn) {
 		MetaModel<?> model = MetaModel.of(obj.getClass());
 		String primaryKey= model.getPrimaryKey().getColumnName();

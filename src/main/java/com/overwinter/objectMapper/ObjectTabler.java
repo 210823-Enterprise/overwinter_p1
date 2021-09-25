@@ -12,7 +12,7 @@ import com.overwinter.util.MetaModel;
 
 public class ObjectTabler extends ObjectMapper{
 	static final ObjectTabler ob = new ObjectTabler();
-	static Logger log = Logger.getLogger(ObjectTabler.class);
+	private static Logger log = Logger.getLogger(ObjectTabler.class);
 	public <T> boolean addTabletoDb(Class<T> clazz, Connection conn) {
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName();
@@ -22,13 +22,16 @@ public class ObjectTabler extends ObjectMapper{
 			switch(c.getType().getSimpleName()) {
 			case "String" : sql += "," + c.getColumnName() + " VARCHAR(50) NOT NULL";
 			break;
-			case "Integer" : sql += "," + c.getColumnName() + " NUMERIC(50)";
+			case "Integer" : sql += "," + c.getColumnName() + " INT";
 			break;
-			case "Boolean" : sql += "," + c.getColumnName() + "BOOLEAN";
+			case "Boolean" : sql += "," + c.getColumnName() + " BOOLEAN";
+			break;
+			case "double" : sql += "," + c.getColumnName() + " NUMERIC";
 			break;
 			}
 		}
 		sql += ");";
+		//log.info("Table created with "+sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
@@ -37,10 +40,11 @@ public class ObjectTabler extends ObjectMapper{
 			return true;
 		} catch (SQLException e) {
 			log.error("SQL error in ObjectTabler");
+			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
 	static public ObjectTabler getInstance() {
 		return ob;
 	}

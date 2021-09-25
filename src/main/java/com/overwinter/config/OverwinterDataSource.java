@@ -12,14 +12,14 @@ import org.apache.log4j.Logger;
 public class OverwinterDataSource {
 	// If you were doing this in your own project, or in a REAL application use the application.properties file
 	// and the Properties object in Java which you use to READ from that file and supply the credentials
-	static Logger log = Logger.getLogger(OverwinterDataSource.class);
+	private static Logger log = Logger.getLogger(OverwinterDataSource.class);
 	private static String driver = "";
 	private static String url = "";
 	private static String username = "";
 	private static String password = "";
 	private static int poolsize = 5;
 	private static GenericObjectPool gPool = null;
-	
+
 	public OverwinterDataSource() {
 		super();
 	}
@@ -59,7 +59,7 @@ public class OverwinterDataSource {
 	}
 
 	// for our own benefit lets create a method to print the connection pool status
-	// for now 
+	// for now
 	public void printDbStatus() {
 		System.out.println("Max: " + getConnectionPool().getMaxActive() + "; Active: "
 				+ getConnectionPool().getNumActive() + "; Idle: " + getConnectionPool().getNumIdle());
