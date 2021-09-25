@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.util</a> &gt; <span class="el_source">MetaModel.java</span></div><h1>MetaModel.java</h1><pre class="source lang-java linenums">package com.overwinter.util;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.management.modelmbean.ModelMBean;
+
+import com.overwinter.annotations.Column;
+import com.overwinter.annotations.Entity;
+import com.overwinter.annotations.Getter;
+import com.overwinter.annotations.Id;
+import com.overwinter.annotations.JoinColumn;
+import com.overwinter.annotations.Setter;
+import com.overwinter.exceptions.NoEnityException;
+import com.overwinter.exceptions.NoPrimaryKeyException;
+
+public class MetaModel&lt;T&gt; {
+	private Class&lt;T&gt; clazz;
+	private IdField primaryKeyField;
+	private ArrayList&lt;Method&gt; setters;
+	private ArrayList&lt;Method&gt; getters;
+	private List&lt;ColumnField&gt; columnFields;
+	private List&lt;ForeignKeyField&gt; foreignKeyFields;
+	private EntityField entity;
+
+	public static &lt;T&gt; MetaModel&lt;T&gt; of(Class&lt;T&gt; clazz) {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">		if (clazz.getAnnotation(Entity.class) == null) {</span>
+<span class="nc" id="L36">			throw new IllegalStateException(&quot;Cannot Create MetaModel for &quot; + clazz.getName());</span>
+		}
+<span class="nc" id="L38">		return new MetaModel&lt;&gt;(clazz);</span>
+	}
+
+<span class="nc" id="L41">	public MetaModel(Class&lt;T&gt; clazz) {</span>
+<span class="nc" id="L42">		this.clazz = clazz;</span>
+<span class="nc" id="L43">		this.columnFields = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L44">		this.getters = new ArrayList&lt;Method&gt;();</span>
+<span class="nc" id="L45">		this.setters = new ArrayList&lt;Method&gt;();</span>
+<span class="nc" id="L46">		setColumns();</span>
+<span class="nc" id="L47">		setMethods();</span>
+<span class="nc" id="L48">	}</span>
+
+	public String getClassName() {
+<span class="nc" id="L51">		return clazz.getName();</span>
+	}
+
+	public String getSimpleName() {
+<span class="nc" id="L55">		return clazz.getSimpleName();</span>
+	}
+
+	public EntityField getEntity() {
+<span class="nc" id="L59">		Annotation[] fields = clazz.getAnnotations();// get all fields</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">		for (Annotation field : fields) {</span>
+<span class="nc" id="L61">			String s = field.toString();</span>
+<span class="nc" id="L62">			String tName = s.substring(s.indexOf(&quot;tableName=&quot;) + 10, s.length() - 1);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">			if (tName != null) {</span>
+				// EntityField e= new EntityField(field);
+<span class="nc" id="L65">				return new EntityField(tName);</span>
+			}
+		}
+<span class="nc" id="L68">		throw new NoEnityException(&quot;No Entity found for &quot; + clazz.getSimpleName());</span>
+	}
+
+	// TO_DO: public IdField getPrimaryKey() .. need new class IdField
+	public IdField getPrimaryKey() {
+		
+<span class="nc" id="L74">		Field[] fields = clazz.getDeclaredFields();// get all fields</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">		for (Field field : fields) {</span>
+<span class="nc" id="L76">			Id id = field.getAnnotation(Id.class);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">			if (id != null) {</span>
+<span class="nc" id="L78">				primaryKeyField = new IdField(field);</span>
+<span class="nc" id="L79">				return primaryKeyField;</span>
+			}
+		}
+<span class="nc" id="L82">		throw new NoPrimaryKeyException(&quot;No primary key found for &quot; + clazz.getSimpleName());</span>
+	}
+
+	public List&lt;ColumnField&gt; getColumns() {
+		
+<span class="nc" id="L87">		return columnFields;</span>
+	}
+	
+	public List&lt;ColumnField&gt; setColumns() {
+<span class="nc" id="L91">		Field[] fields = clazz.getDeclaredFields();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">		for (Field field : fields) {</span>
+<span class="nc" id="L93">			Column column = field.getAnnotation(Column.class);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">			if (column != null) {</span>
+<span class="nc" id="L95">				columnFields.add(new ColumnField(field));</span>
+			}
+		}
+<span class="nc" id="L98">		return columnFields;</span>
+	} 
+
+	public Method[] setMethods() {
+<span class="nc" id="L102">		Method[] mArray = clazz.getMethods();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">		for (Method m : mArray) {</span>
+
+<span class="nc" id="L105">			Setter s = m.getAnnotation(Setter.class);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">			if (s != null) {</span>
+<span class="nc" id="L107">				setters.add(m);</span>
+			}
+<span class="nc" id="L109">			Getter g = m.getAnnotation(Getter.class);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">			if (g != null) {</span>
+<span class="nc" id="L111">				getters.add(m);</span>
+			}
+		}
+<span class="nc" id="L114">		return mArray;</span>
+	}
+
+	public Method getGetterMethod(String methodName) {
+<span class="nc" id="L118">		Method getter = null;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">		for (Method m : getters) {</span>
+<span class="nc" id="L120">			Getter g = m.getAnnotation(Getter.class);</span>
+<span class="nc bnc" id="L121" title="All 4 branches missed.">			if (g != null &amp;&amp; g.name().equals(methodName)) {</span>
+<span class="nc" id="L122">				getter = m;</span>
+			}
+<span class="nc" id="L124">		}</span>
+<span class="nc" id="L125">		return getter;</span>
+	}
+
+	public List&lt;ForeignKeyField&gt; getForeignKeys() {
+
+<span class="nc" id="L130">		List&lt;ForeignKeyField&gt; foreignKeyFields = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L131">		Field[] fields = clazz.getDeclaredFields();</span>
+
+<span class="nc bnc" id="L133" title="All 2 branches missed.">		for (Field field : fields) {</span>
+
+<span class="nc" id="L135">			JoinColumn column = field.getAnnotation(JoinColumn.class);</span>
+
+<span class="nc bnc" id="L137" title="All 2 branches missed.">			if (column != null) {</span>
+<span class="nc" id="L138">				foreignKeyFields.add(new ForeignKeyField(field));</span>
+			}
+		}
+<span class="nc" id="L141">		return foreignKeyFields;</span>
+
+	}
+
+	public Method getSetterMethod(String methodName) {
+		// TODO Auto-generated method stub
+<span class="nc" id="L147">		Method setter = null;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">		for (Method m : setters) {</span>
+<span class="nc" id="L149">			Setter s = m.getAnnotation(Setter.class);</span>
+<span class="nc bnc" id="L150" title="All 4 branches missed.">			if (s != null &amp;&amp; s.name().equals(methodName)) {</span>
+<span class="nc" id="L151">				setter = m;</span>
+			}
+<span class="nc" id="L153">		}</span>
+<span class="nc" id="L154">		return setter;</span>
+	}
+	public Constructor&lt;T&gt; getConstructor(){
+		try {
+<span class="nc" id="L158">			Constructor&lt;T&gt; c = clazz.getConstructor();</span>
+<span class="nc" id="L159">			return c;</span>
+<span class="nc" id="L160">		} catch (NoSuchMethodException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L162">			e.printStackTrace();</span>
+<span class="nc" id="L163">		} catch (SecurityException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L165">			e.printStackTrace();</span>
+<span class="nc" id="L166">		}</span>
+<span class="nc" id="L167">		return null;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

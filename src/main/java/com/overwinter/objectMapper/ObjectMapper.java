@@ -7,8 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public abstract class ObjectMapper {
-	
+
 	protected PreparedStatement setStatement(PreparedStatement pstmt, ParameterMetaData pd, Method getter, Object obj, int index) {
+
 		try {
 			return setPreparedStatmentByType(pstmt, pd.getParameterTypeName(index), String.valueOf(getter.invoke(obj)), index);
 		} catch (IllegalAccessException e) {
@@ -56,7 +57,9 @@ public abstract class ObjectMapper {
 			case "double":
 				pstmt.setDouble(index, Double.parseDouble(input));
 				break;
-				//TODO:add timestamp, float, and other types
+			case "numeric":
+				pstmt.setDouble(index, Double.parseDouble(input));
+				break;
 			}
 			return pstmt;
 		} catch (SQLException e) {

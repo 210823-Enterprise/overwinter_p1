@@ -3,6 +3,8 @@ package com.overwinter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +17,6 @@ import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.objectMapper.ObjectCache;
 import com.overwinter.objectMapper.ObjectGetter;
 import com.overwinter.objectMapper.ObjectInsert;
-import com.overwinter.objectMapper.ObjectMapper;
 import com.overwinter.objectMapper.ObjectRemover;
 import com.overwinter.objectMapper.ObjectTabler;
 import com.overwinter.objectMapper.ObjectUpdate;
@@ -34,17 +35,17 @@ public class OverWinterORM {
 	private final Transaction transaction = Transaction.getInstance();
 	private final ObjectCache obj_cache = ObjectCache.getInstance();
 	// obj getter, etc.....
-	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/test/resources/test_application.properties"));
-	
+	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/main/resources/application.properties"));
+
 	private OverWinterORM() {
 		try {
 			dataSource = pool.setUpPool();
 			conn = dataSource.getConnection();
-			log.info("\nNew OverWinterORM launched:"+this);
+			log.info("New OverWinterORM launched:"+this);
 		} catch (SQLException e) {
-			log.info("\nSQLException thrown in OverwinterDataSource");
+			log.info("SQLException thrown in OverwinterDataSource");
 		} catch (Exception e) {
-			log.info("\nGeneral Exception thrown in OverwinterDataSource");
+			log.info("General Exception thrown in OverwinterDataSource");
 		}
 	}
 
@@ -84,14 +85,14 @@ public class OverWinterORM {
 
 	}
 
-	public void insertObjIntoDB(Object obj) {
-		obj_insert.insertObjectIntoDB(obj, conn);
+	public boolean insertObjIntoDB(Object obj) {
+		return obj_insert.insertObjectIntoDB(obj, conn);
 	}
-	
+
 	public Transaction beginTransaction() {
 		return transaction.beginTransaction(conn);
 	}
-	
+
 	public Transaction commit() {
 		return transaction.commit(conn);
 	}
@@ -99,34 +100,36 @@ public class OverWinterORM {
 	public Transaction rollBack() {
 		return transaction.rollBack(conn);
 	}
-	
+
 	public Transaction rollBackWithSpecificSavePoint(Savepoint savepoint) {
 		return transaction.rollBackWithSpecificSavePoint(conn, savepoint);
 	}
-	
+
 	public Transaction setSavePoint() {
-		
+
 		return transaction.setSavePoint(conn);
 	}
-	
+
 	public Transaction setSavePointWithName(String name) {
 		return transaction.setSavePointWithName(conn, name);
 	}
-	
-	public boolean addAllFromDBToCache(final Class<?> clazz) {
+
+	public HashMap<Class<?>, HashSet<Object>> addAllFromDBToCache(final Class<?> clazz) {
 		// this method will call the first time user login
 		Optional<List<Object>> list = obj_getter.getListObjectFromDB(clazz, conn);
 		return obj_cache.addAllFromDBToCache(clazz, list);
 	}
-	
-	public ObjectCache putObjectInCache(Object obj) {
+
+	public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object obj) {
 		return obj_cache.putObjectInCache(obj);
 	}
 
 	public Transaction getTransaction() {
 		return transaction;
 	}
-	
-	
-	
+
+	public HashSet<Object> getCache(Class<?> clazz) {
+		return obj_cache.getCache().get(clazz);
+	}
+
 }

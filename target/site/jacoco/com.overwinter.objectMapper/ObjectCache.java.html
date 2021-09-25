@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObjectCache.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">overwinter_p1</a> &gt; <a href="index.source.html" class="el_package">com.overwinter.objectMapper</a> &gt; <span class="el_source">ObjectCache.java</span></div><h1>ObjectCache.java</h1><pre class="source lang-java linenums">package com.overwinter.objectMapper;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.log4j.Logger;
+
+import com.overwinter.OverWinterORM;
+import com.overwinter.config.OverwinterDataSource;
+import com.overwinter.dummyModels.Tester;
+import com.overwinter.util.Configuration;
+import com.overwinter.util.MetaModel;
+
+public class ObjectCache {
+<span class="fc" id="L21">	private static Logger log = Logger.getLogger(ObjectCache.class);</span>
+	public final HashMap&lt;Class&lt;?&gt;, HashSet&lt;Object&gt;&gt; cache;
+<span class="fc" id="L23">	static final ObjectCache obj_cache = new ObjectCache();</span>
+<span class="fc" id="L24">	public OverWinterORM orm = OverWinterORM.getInstance();</span>
+
+	private ObjectCache() {
+<span class="fc" id="L27">		super();</span>
+<span class="fc" id="L28">		cache = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L29">	}</span>
+
+	// we call this method after the first time
+	public ObjectCache putObjectInCache(Object o) {
+		// set to that cache object
+<span class="nc" id="L34">		HashSet&lt;Object&gt; hSet = cache.get(o.getClass());</span>
+<span class="nc" id="L35">		int pk = 0;</span>
+<span class="nc" id="L36">		MetaModel&lt;?&gt; model = MetaModel.of(o.getClass());</span>
+<span class="nc" id="L37">		String primaryKey = model.getPrimaryKey().getColumnName();</span>
+<span class="nc" id="L38">		Method m = model.getGetterMethod(primaryKey);</span>
+		try {
+<span class="nc" id="L40">			pk = (int) m.invoke(o);</span>
+			// loop through hashset of the attach class
+<span class="nc bnc" id="L42" title="All 2 branches missed.">			for (Object theObj : hSet) {</span>
+<span class="nc" id="L43">				MetaModel&lt;?&gt; model2 = MetaModel.of(theObj.getClass());</span>
+<span class="nc" id="L44">				String primaryKey2 = model2.getPrimaryKey().getColumnName();</span>
+<span class="nc" id="L45">				Method m2 = model2.getGetterMethod(primaryKey2);</span>
+<span class="nc" id="L46">				int pk2 = (int) m2.invoke(theObj);</span>
+				// we looking for the id of one of the object in the hashset
+<span class="nc bnc" id="L48" title="All 2 branches missed.">				if (pk == pk2) {</span>
+					// perform update
+<span class="nc" id="L50">					hSet.remove(theObj); // id matched</span>
+<span class="nc" id="L51">					hSet.add(o); // new object</span>
+				}
+<span class="nc" id="L53">			}</span>
+<span class="nc" id="L54">		} catch (IllegalAccessException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L56">			e.printStackTrace();</span>
+<span class="nc" id="L57">		} catch (IllegalArgumentException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L59">			e.printStackTrace();</span>
+<span class="nc" id="L60">		} catch (InvocationTargetException e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L62">			e.printStackTrace();</span>
+<span class="nc" id="L63">		}</span>
+
+<span class="nc" id="L65">		this.cache.put(o.getClass(), hSet);</span>
+		
+<span class="nc" id="L67">		cache.forEach((k, v) -&gt; log.info(&quot;\nUPDATE PER CRUD Key &quot; + k + &quot; Value &quot; + v));</span>
+<span class="nc" id="L68">		return getInstance();</span>
+	}
+
+	public boolean addAllFromDBToCache(final Class&lt;?&gt; clazz, Optional&lt;List&lt;Object&gt;&gt; list) {
+
+		// new hashset every time user log in
+<span class="nc" id="L74">		HashSet&lt;Object&gt; hSet = new HashSet&lt;&gt;();</span>
+		// loop through
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		for (Object theObj : list.get()) {</span>
+<span class="nc" id="L77">			hSet.add(theObj);</span>
+<span class="nc" id="L78">		}</span>
+<span class="nc" id="L79">		this.cache.put(clazz, hSet);</span>
+<span class="nc" id="L80">		cache.forEach((k, v) -&gt; log.info(&quot;\nFIRST TIME CACHE Key &quot; + k + &quot; Value &quot; + v));</span>
+<span class="nc" id="L81">		return true;</span>
+	}
+
+	public static ObjectCache getInstance() {
+<span class="fc" id="L85">		return obj_cache;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

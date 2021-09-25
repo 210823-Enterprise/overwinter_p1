@@ -19,7 +19,7 @@ public class OverwinterDataSource {
 	private static String password = "";
 	private static int poolsize = 5;
 	private static GenericObjectPool gPool = null;
-	
+
 	public OverwinterDataSource() {
 		super();
 	}
@@ -31,7 +31,7 @@ public class OverwinterDataSource {
 		username = config.getUsername();
 		password = config.getPassword();
 		poolsize = config.getPoolSize();
-		log.info("\nnew OverwitnerDataSource created: "+this);
+		log.info("new OverwitnerDataSource created: "+this);
 	}
  	// Apache Common dbcp gives us the functionality to create a connection pool. But we have to do so
 	// by using its specific class and functionality called GenericObjectPool
@@ -59,7 +59,7 @@ public class OverwinterDataSource {
 	}
 
 	// for our own benefit lets create a method to print the connection pool status
-	// for now 
+	// for now
 	public void printDbStatus() {
 		System.out.println("Max: " + getConnectionPool().getMaxActive() + "; Active: "
 				+ getConnectionPool().getNumActive() + "; Idle: " + getConnectionPool().getNumIdle());
