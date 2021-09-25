@@ -78,6 +78,31 @@ public class ObjectGetter extends ObjectMapper {
 
 	}
 
+	public Object getObjectFromDB(final Class<?> clazz, Connection conn, int id) {
+		System.out.println(conn);
+		MetaModel<?> model = MetaModel.of(clazz);
+		String primaryKey = model.getPrimaryKey().getColumnName();
+		String sql = "SELECT * FROM " + clazz.getSimpleName().toLowerCase() + " WHERE " + primaryKey + "=?;";
+		List<Object> listObjects = new ArrayList<>();
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ParameterMetaData pd = pstmt.getParameterMetaData();
+			pstmt = setPreparedStatmentByType(pstmt, pd.getParameterTypeName(1), Integer.toString(id), 1);
+			log.info("Prepared Statment " + pstmt + " is about to query the database");
+			ResultSet rs = pstmt.executeQuery();
+			log.info(sql + " has been executed against database");
+			while (rs.next()) {
+				listObjects = createSimpleObject(model, rs, primaryKey, listObjects);
+			}
+		} catch (SQLException e) {
+			log.error("SQLException in getObjectFromDB()");
+		} catch (IllegalArgumentException e) {
+			log.error("bad argument in getObjectFromDB()");
+		}
+		return listObjects.get(0);
+
+	}
+
 	public String[] createColumnArray(String columns) {
 		String[] columnArray = new String[0];
 		if (columns != null && columns.length() > 0) {
