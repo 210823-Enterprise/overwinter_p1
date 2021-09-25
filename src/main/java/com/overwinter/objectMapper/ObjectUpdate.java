@@ -62,7 +62,7 @@ public class ObjectUpdate extends ObjectMapper {
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.error("\nSQLException error in ObjectUpdate");
+			log.error("SQLException error in ObjectUpdate");
 		}
 		return false;
 	}
