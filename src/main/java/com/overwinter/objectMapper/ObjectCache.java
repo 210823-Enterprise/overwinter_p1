@@ -44,7 +44,7 @@ public class ObjectCache {
 				if (pk == pk2) {
 					// perform update
 					hSet.remove(theObj); // id matched
-				}
+				} 
 			}
 			hSet.add(o); // new object
 		} catch (IllegalAccessException e) {
