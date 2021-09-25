@@ -25,6 +25,7 @@ public class ObjectCache {
 
 	// we call this method after the first time
 	public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object o) {
+		log.info("Starting putObjectInCache");
 		// set to that cache object
 		HashSet<Object> hSet = cache.get(o.getClass());
 		int pk = 0;
@@ -34,6 +35,8 @@ public class ObjectCache {
 		try {
 			pk = (int) m.invoke(o);
 			// loop through hashset of the attach class
+			boolean copy=false;
+			Object o2=null;
 			for (Object theObj : hSet) {
 				MetaModel<?> model2 = MetaModel.of(theObj.getClass());
 				String primaryKey2 = model2.getPrimaryKey().getColumnName();
@@ -42,10 +45,10 @@ public class ObjectCache {
 				// we looking for the id of one of the object in the hashset
 				if (pk == pk2) {
 					// perform update
-					hSet.remove(theObj); // id matched
-					hSet.add(o); // new object
+					hSet.remove(o2); // id matched
 				}
 			}
+			hSet.add(o); // new object
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,12 +62,13 @@ public class ObjectCache {
 
 		this.cache.put(o.getClass(), hSet);
 
-		cache.forEach((k, v) -> log.info("\nUPDATE PER CRUD Key " + k + " Value " + v));
+		cache.forEach((k, v) -> log.info("UPDATE PER CRUD Key " + k + " Value " + v));
+		log.info("Ending putObjectInCache");
 		return cache;
 	}
 
 	public HashMap<Class<?>, HashSet<Object>> addAllFromDBToCache(final Class<?> clazz, Optional<List<Object>> list) {
-
+		log.info("Starting addAllFromDBToCache");
 		// new hashset every time user log in
 		HashSet<Object> hSet = new HashSet<>();
 		// loop through
@@ -72,7 +76,8 @@ public class ObjectCache {
 			hSet.add(theObj);
 		}
 		this.cache.put(clazz, hSet);
-		cache.forEach((k, v) -> log.info("\nFIRST TIME CACHE Key " + k + " Value " + v));
+		cache.forEach((k, v) -> log.info("FIRST TIME CACHE Key " + k + " Value " + v));
+		log.info("Ending addAllFromDBToCache");
 		return cache;
 	}
 	
