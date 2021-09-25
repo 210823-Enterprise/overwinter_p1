@@ -58,6 +58,10 @@ public class OverWinterORM {
 		return obj_getter.getListObjectFromDB(obj.getClass(), conn);
 
 	}
+	public Object getObjectFromDB(Class<?> clazz,int id) throws InstantiationException, IllegalAccessException {
+		return obj_getter.getObjectFromDB(clazz, conn, id);
+
+	}
 	public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions){
 		return obj_getter.getListObjectFromDB(clazz, conn, columns, conditions, null);
 	}
