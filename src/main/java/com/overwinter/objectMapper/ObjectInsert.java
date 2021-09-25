@@ -82,19 +82,19 @@ public class ObjectInsert extends ObjectMapper {
 			try {
 				m.invoke(obj, pk);
 			} catch (IllegalAccessException e) {
-				log.info("\nIllegalAccessException error in ObjectInsert");
+				log.info("IllegalAccessException error in ObjectInsert");
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
-				log.info("\nIllegalArgumentException error in ObjectInsert");
+				log.info("IllegalArgumentException error in ObjectInsert");
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
-				log.info("\nInvocationTargetException error in ObjectInsert");
+				log.info("InvocationTargetException error in ObjectInsert");
 			}
 			return true;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.info("\nSQLException error in ObjectInsert");
+			log.info("SQLException error in ObjectInsert");
 			e.printStackTrace();
 		}
 		return false;

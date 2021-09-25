@@ -26,7 +26,7 @@ public class ObjectRemover extends ObjectMapper {
 			return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.error("\nSQLException error in ObjectRemover");
+			log.error("SQLException error in ObjectRemover");
 		}
 		return false;
 	}
