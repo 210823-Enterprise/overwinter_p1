@@ -63,6 +63,7 @@ public class OverWinterORMTest {
 
 		when(mockobject_remover.removeObjectFromDb(test, mockconn)).thenReturn(true);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 		boolean t = orm.deleteObjFromDB(test);
 		
@@ -91,6 +92,8 @@ public class OverWinterORMTest {
 		assertEquals(ob, orm.getListObjectFromDB(test));
 	}
 =======
+=======
+>>>>>>> 7714c226885b66baca509e2efc572463c5666757
 
 		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
 
@@ -109,5 +112,8 @@ public class OverWinterORMTest {
 //		System.out.println(ob);
 //		assertEquals(ob, orm.getListObjectFromDB(test));
 //	}
+<<<<<<< HEAD
 >>>>>>> 5c32f10ddb57976dc448e66a3df21a40c926ed8f
+=======
+>>>>>>> 7714c226885b66baca509e2efc572463c5666757
 }

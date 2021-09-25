@@ -1,7 +1,6 @@
 package com.overwinter;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +11,6 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import com.overwinter.config.OverwinterCfg;
-import com.overwinter.config.OverwinterDataSource;
 import com.overwinter.objectMapper.ObjectCache;
 import com.overwinter.objectMapper.ObjectGetter;
 import com.overwinter.objectMapper.ObjectInsert;
@@ -26,7 +23,6 @@ public class OverWinterORM {
 	static Logger log = Logger.getLogger(ObjectRemover.class);
 	final private static OverWinterORM overWinterORM = new OverWinterORM();
 	Connection conn = null;
-	DataSource dataSource = null;
 	private final ObjectRemover obj_remover = ObjectRemover.getInstance();
 	private final ObjectGetter obj_getter = ObjectGetter.getInstance();
 	private final ObjectTabler obj_table = ObjectTabler.getInstance();
@@ -34,17 +30,13 @@ public class OverWinterORM {
 	private final ObjectInsert obj_insert = ObjectInsert.getInstance();
 	private final Transaction transaction = Transaction.getInstance();
 	private final ObjectCache obj_cache = ObjectCache.getInstance();
-	// obj getter, etc.....
-	OverwinterDataSource pool = new OverwinterDataSource(new OverwinterCfg().configure("./src/main/resources/application.properties"));
 
 	private OverWinterORM() {
 		try {
-			dataSource = pool.setUpPool();
-			conn = dataSource.getConnection();
+			conn = getConn();
 			log.info("New OverWinterORM launched:"+this);
-		} catch (SQLException e) {
-			log.info("SQLException thrown in OverwinterDataSource");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			log.info("General Exception thrown in OverwinterDataSource");
 		}
 	}
@@ -130,6 +122,15 @@ public class OverWinterORM {
 
 	public HashSet<Object> getCache(Class<?> clazz) {
 		return obj_cache.getCache().get(clazz);
+	}
+	
+	
+	public Connection getConn() {
+		return conn;
+	}
+
+	public void setConn(Connection connection) {
+		this.conn = connection;
 	}
 
 }
