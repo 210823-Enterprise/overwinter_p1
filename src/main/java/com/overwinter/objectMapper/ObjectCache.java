@@ -34,9 +34,7 @@ public class ObjectCache {
 		try {
 			pk = (int) m.invoke(o);
 			// loop through hashset of the attach class
-			System.out.println("Probably here: " + hSet);
 			for (Object theObj : hSet) {
-				System.out.println("Is it here: " + theObj);
 				MetaModel<?> model2 = MetaModel.of(theObj.getClass());
 				String primaryKey2 = model2.getPrimaryKey().getColumnName();
 				Method m2 = model2.getGetterMethod(primaryKey2);
