@@ -31,15 +31,14 @@ public class ObjectTabler extends ObjectMapper{
 			}
 		}
 		sql += ");";
-		//log.info("Table created with "+sql);
 		try {
 			pstmt = conn.prepareStatement(sql);
 			ParameterMetaData pd = pstmt.getParameterMetaData();
 			pstmt.execute();
-			log.info("Table created using "+pstmt);
+			log.info("\nTable created using "+pstmt);
 			return true;
 		} catch (SQLException e) {
-			log.error("SQL error in ObjectTabler");
+			log.error("\nSQL error in ObjectTabler");
 			e.printStackTrace();
 		}
 		return false;

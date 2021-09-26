@@ -51,7 +51,6 @@ public class OverWinterORM {
 	public boolean deleteObjFromDB(Object obj) {
 
 		return obj_remover.removeObjectFromDb(obj, conn);
-
 	}
 
 	public Optional<List<Object>> getListObjectFromDB(Object obj) throws InstantiationException, IllegalAccessException {
@@ -72,13 +71,10 @@ public class OverWinterORM {
 
 	public boolean addTabletoDb(Class<?> clazz) {
 		return obj_table.addTabletoDb(clazz, conn);
-
 	}
 
 	public Object updateObjFromDB(Object obj) {
-
 		return obj_updater.updateObjectFromDB(obj, conn);
-
 	}
 
 	public boolean insertObjIntoDB(Object obj) {
@@ -127,7 +123,6 @@ public class OverWinterORM {
 	public HashSet<Object> getCache(Class<?> clazz) {
 		return obj_cache.getCache().get(clazz);
 	}
-	
 	
 	public Connection getConn() {
 		return conn;

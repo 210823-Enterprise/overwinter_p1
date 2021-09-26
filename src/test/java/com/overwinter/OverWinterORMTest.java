@@ -5,6 +5,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,8 +65,6 @@ public class OverWinterORMTest {
 		Tester test = new Tester(1, "Kirk", "Hahn");
 
 		when(mockobject_remover.removeObjectFromDb(test, mockconn)).thenReturn(true);
-<<<<<<< HEAD
-<<<<<<< HEAD
 		
 		boolean t = orm.deleteObjFromDB(test);
 		
@@ -89,15 +90,12 @@ public class OverWinterORMTest {
 		Optional<List<Object>> ob = Optional.of(testList);
 		when(mockobject_getter.getListObjectFromDB(test.getClass(), mockconn)).thenReturn(ob);
 		
-		assertEquals(ob, orm.getListObjectFromDB(test));
-	}
-=======
-=======
->>>>>>> 7714c226885b66baca509e2efc572463c5666757
-
-		boolean t = mockobject_remover.removeObjectFromDb(test, mockconn);
-
-		assertEquals(true, t);
+		try {
+			assertEquals(ob, orm.getListObjectFromDB(test));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 //	@Test
@@ -112,8 +110,4 @@ public class OverWinterORMTest {
 //		System.out.println(ob);
 //		assertEquals(ob, orm.getListObjectFromDB(test));
 //	}
-<<<<<<< HEAD
->>>>>>> 5c32f10ddb57976dc448e66a3df21a40c926ed8f
-=======
->>>>>>> 7714c226885b66baca509e2efc572463c5666757
 }
