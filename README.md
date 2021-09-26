@@ -65,9 +65,7 @@ Finally, inside your project structure you need a application.proprties file.
   - #### `public void printDbStatus()`  
      - print the current stats for connection pool
   - #### `public static OverWinterORM getInstance()`  
-     - returns the singleton instance of the class. It is the starting point to calling any of the below methods.  
-  - #### `public HashSet<Object> getCache(Class<?> clazz)`  
-     - returns cache of requested class as a HashSet.  
+     - returns the singleton instance of the class. It is the starting point to calling any of the below methods.
   - #### `public boolean addTabletoDb(Class<?> clazz)`  
      - Adds a class to the ORM. This is the method to use to declare a Class is an object inside of the database. This will create the table within the database given in application.properties
   - #### `public boolean updateObjFromDB(final Object obj)`  
@@ -81,7 +79,6 @@ Finally, inside your project structure you need a application.proprties file.
   - #### `public Optional<List<Object>> getListObjectFromDB(Object obj)`
       - Returns all objects the same class as the given object
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions)`
-  - #### `public Object getObjectFromDB(Class<?> clazz,int id)`
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions,final String operators)`  
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions,final String operators)`  
      - Gets a list of all objects in the database which match the included search criteria  
@@ -91,17 +88,15 @@ Finally, inside your project structure you need a application.proprties file.
   - #### `public void commit()`  
      - begin databse commit.  
   - #### `public void rollBack()`  
-     - Rollback to previous commit.  
+     - Rollback to previous commit. 
+`- #### `public void setSavePointWithName(String name)`  
+     - Set a savepoint with the given name.    
   - #### `public void rollBackWithSpecificSavePoint(Savepoint savepoint)`  
      - Rollback to previous commit with savepoint. 
-  - #### `public void setSavePointWithName(String name)`  
-     - Set a savepoint with the given name.   
-  - #### `public void setSavePointWithName(String name)`  
-     - Set a savepoint with the given name.  
-  - #### `public void enableAutoCommit()`  
-     - Enable auto commits on the database.  
   - #### `public void beginTransaction()`
      - Start a transaction block.  
+  - #### `public HashSet<Object> getCache(Class<?> clazz)`  
+     - returns cache of requested class as a HashSet.  
   - #### `public void addAllFromDBToCache(final Class<?> clazz)`  
      - Adds all objects currently in the databse of the given clas type to the cache.  
   - #### `public HashMap<Class<?>, HashSet<Object>> putObjectInCache(Object obj)`
