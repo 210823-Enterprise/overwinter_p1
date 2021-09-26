@@ -79,7 +79,6 @@ public class ObjectGetter extends ObjectMapper {
 	}
 
 	public Object getObjectFromDB(final Class<?> clazz, Connection conn, int id) {
-		System.out.println(conn);
 		MetaModel<?> model = MetaModel.of(clazz);
 		String primaryKey = model.getPrimaryKey().getColumnName();
 		String sql = "SELECT * FROM " + clazz.getSimpleName().toLowerCase() + " WHERE " + primaryKey + "=?;";
