@@ -63,7 +63,8 @@ Finally, inside your project structure you need a application.proprties file.
       - Indicates that the annotated field is a serial key.
 
   ### User API
-  
+  - #### `public void printDbStatus()`  
+     - print the current stats for connection pool
   - #### `public static OverWinterORM getInstance()`  
      - returns the singleton instance of the class. It is the starting point to calling any of the below methods.  
   - #### `public HashSet<Object> getCache(Class<?> clazz)`  
