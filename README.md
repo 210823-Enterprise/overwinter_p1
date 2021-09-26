@@ -1,4 +1,4 @@
-# OverWinter
+# Overwinter
 ## Project Description
 A java based ORM framework for simplifying connecting to and pulling from an SQL database without the need for SQL or connection management. 
 
