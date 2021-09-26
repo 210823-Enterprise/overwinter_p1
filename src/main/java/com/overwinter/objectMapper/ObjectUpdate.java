@@ -57,7 +57,7 @@ public class ObjectUpdate extends ObjectMapper {
 			}
 			statement = setStatement(statement, pd, (model.getGetterMethod(model.getPrimaryKey().getColumnName())), obj,
 					counter);
-			log.error(sql+"updated the database");
+			log.info(statement+"updated the database");
 			statement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
