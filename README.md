@@ -21,6 +21,7 @@ To-do list: [`for future iterations`]
 * Implement of aggregate functions.   
 * Include LIKE in possible conditions
 * fix application.properities finding bug with mac OS
+* make serial primary key annotation
 
 ## Getting Started  
 Currently project must be included as local dependency. to do so:
@@ -42,8 +43,8 @@ Finally, inside your project structure you need a application.proprties file.
  (typically located src/main/resources/)
  ``` 
   url=path/to/database
-  admin-usr=username/of/database
-  admin-pw=password/of/database  
+  username=username/of/database
+  password=password/of/database  
   ```
   
 ## Usage  
@@ -59,8 +60,6 @@ Finally, inside your project structure you need a application.proprties file.
       - Indicates that the anotated method is a getter for 'column_name'.  
    - #### @Id(name = "column_name")
       - Indicates that the annotated field is the primary key for the table.
-   - #### @SerialKey(name = "column_name")(future)
-      - Indicates that the annotated field is a serial key.
 
   ### User API
   - #### `public void printDbStatus()`  
@@ -80,8 +79,9 @@ Finally, inside your project structure you need a application.proprties file.
   - #### `public Object getObjectFromDB(Class<?> clazz,int id)` 
       - Gets a object in the database which match the included id  
   - #### `public Optional<List<Object>> getListObjectFromDB(Object obj)`
+      - Returns all objects the same class as the given object
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions)`
-  - #### `public Object getObjectFromDB(Class<?> clazz,int id)`  
+  - #### `public Object getObjectFromDB(Class<?> clazz,int id)`
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions,final String operators)`  
   - #### `public Optional<List<Object>> getListObjectFromDB(final Class <?> clazz, final String columns, final String conditions,final String operators)`  
      - Gets a list of all objects in the database which match the included search criteria  
