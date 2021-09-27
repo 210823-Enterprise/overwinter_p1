@@ -19,9 +19,7 @@ List of features ready and TODOs for future development
 To-do list: [`for future iterations`]
 * Mapping of join columns inside of entities.    
 * Implement of aggregate functions.   
-* Include LIKE in possible conditions
 * fix application.properities finding bug with mac OS
-* make serial primary key annotation
 
 ## Getting Started  
 Currently project must be included as local dependency. to do so:
