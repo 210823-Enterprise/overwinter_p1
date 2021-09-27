@@ -89,7 +89,7 @@ Finally, inside your project structure you need a application.proprties file.
      - begin databse commit.  
   - #### `public void rollBack()`  
      - Rollback to previous commit. 
-`- #### `public void setSavePointWithName(String name)`  
+ - #### `public void setSavePointWithName(String name)`  
      - Set a savepoint with the given name.    
   - #### `public void rollBackWithSpecificSavePoint(Savepoint savepoint)`  
      - Rollback to previous commit with savepoint. 
